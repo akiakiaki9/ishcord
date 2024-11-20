@@ -1,0 +1,14 @@
+.layout {
+    margin-left: 300px;
+    padding: 20px 10px;
+}
+
+.layout-blok {
+
+}
+
+@media (max-width: 1000px) {
+    .layout {
+        margin-left: 0;
+    }
+}
