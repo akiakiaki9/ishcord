@@ -1,0 +1,31 @@
+<div className='layout'>
+      <div className='profile'>
+        <h1>Мой профиль</h1>
+        <div className='profile-blok'>
+          <div className="profile-blok__section">
+            <p className='profile-blok__section-p1'>Имя:</p>
+            <p className='profile-blok__section-p2'>Akbar Tillayev</p>
+            <p className='profile-blok__section-p3'><MdEdit className='profile-blok__section__icon' /></p>
+          </div>
+          <div className="profile-blok__section">
+            <p className='profile-blok__section-p1'>Возраст:</p>
+            <p className='profile-blok__section-p2'><span className='number-style'>20</span> лет</p>
+            <p className='profile-blok__section-p3'><MdEdit className='profile-blok__section__icon' /></p>
+          </div>
+          <div className="profile-blok__section">
+            <p className='profile-blok__section-p1'>Город:</p>
+            <p className='profile-blok__section-p2'>Бухара</p>
+            <p className='profile-blok__section-p3'><MdEdit className='profile-blok__section__icon' /></p>
+          </div>
+          <div className="profile-blok__section">
+            <p className='profile-blok__section-p1'>Email:</p>
+            <p className='profile-blok__section-p2'>tillayevakbarshoh@gmail.com</p>
+            <p className='profile-blok__section-p3'><MdEdit className='profile-blok__section__icon' /></p>
+          </div>
+        </div>
+        <div className="profile-footer">
+          <p className='profile-footer-p1'>Выйти из аккаунта</p>
+          <p className='profile-footer-p2'>Удалить аккаунт</p>
+        </div>
+      </div>
+    </div>

@@ -1,3 +1,58 @@
+.login {
+    height: 100vh;
+    overflow: hidden;
+    background-color: #fff;
+    color: #000;
+}
+
+.login__container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.login-blok-1 {
+    width: 50%;
+}
+
+.login-blok-2 {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    padding-bottom: 60px;
+}
+
+.login-blok-1 video {
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+}
+
+.login-blok__section-1__p1 {
+    font-size: 150%;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.login-blok__section-1__p2 {
+    font-size: 85%;
+    text-align: center;
+    font-weight: 600;
+}
+
+.login-blok__section-1__p2 a {
+    text-decoration: none;
+    color: var(--blue-light-color);
+    transition: .5s;
+}
+
+.login-blok__section-1__p2 a:hover {
+    opacity: .7;
+}
+
 .login-form {
     display: flex;
     flex-direction: column;
@@ -10,11 +65,11 @@
 }
 
 .login-form button {
-    width: 400px;
+    width: 300px;
     font-size: 110%;
     padding: 7px 10px;
     cursor: pointer;
-    background-color: var(--blue-color);
+    background-color: var(--blue-light-color);
     color: #fff;
     border: none;
     transition: .5s;
@@ -30,23 +85,86 @@
     gap: 5px;
 }
 
-.login-form__section p {
-    font-weight: bold;
-}
-
-.login-form__section p a {
-    color: var(--blue-color);
-    transition: .5s;
-}
-
-.login-form__section p a:hover {
-    opacity: .7;
+.login-form__section-part {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
 .login-form__section input {
-    width: 400px;
+    width: 300px;
     font-size: 110%;
     padding: 10px;
-    font-weight: bold;
+    font-weight: 600;
     border-radius: 5px;
+    border: 2px solid #000;
+    outline: none;
+}
+
+.login-form__footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 80px;
+    align-items: center;
+}
+
+.login-form__footer a {
+    color: #000;
+    text-decoration: none;
+    transition: .5s;
+}
+
+.login-form__footer a:hover {
+    opacity: .7;
+}
+
+.login-form__google {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 300px;
+    padding: 10px;
+    border-radius: 15px;
+    border: 1px solid #000;
+    cursor: pointer;
+    transition: .5s;
+}
+
+.login-form__google:hover {
+    opacity: .7;
+}
+
+.login-form__google__icon {
+    width: 25px;
+    height: 25px;
+}
+
+@media (max-width: 426px) {
+    .login-form__section input {
+        width: 300px;
+        font-size: 110%;
+    }
+
+    .login-form button {
+        width: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .login__container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .login-blok-1 {
+        display: none;
+    }
+
+    .login-blok-2 {
+        align-items: center;
+        padding-bottom: 0px;
+        padding-top: 100px;
+        width: 100%;
+    }
 }

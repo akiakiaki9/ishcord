@@ -1,0 +1,219 @@
+.vacancy {
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.vacancy__cards {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.vacancy__card {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--card-color);
+    padding: 20px;
+    border-radius: 5px;
+    min-width: 600px;
+    max-width: 601px;
+    width: 100%;
+    transition: .3s;
+}
+
+.vacancy__card:hover {
+    box-shadow: 0px 0px 10px 1px rgba(181, 181, 181, 1);
+}
+
+.vacancy__card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 20px;
+}
+
+.vacancy__card__header a {
+    text-decoration: none;
+    color: #fff;
+    transition: .5s;
+    cursor: pointer;
+}
+
+.vacancy__card__header a:hover {
+    color: var(--blue-light-color);
+}
+
+.vacancy__card__header__icon {
+    width: 30px;
+    height: 30px;
+    transition: .5s;
+    cursor: pointer;
+}
+
+.vacancy__card__header__icon__delete {
+    width: 30px;
+    height: 30px;
+    transition: .5s;
+    cursor: pointer;
+    color: red;
+}
+
+.vacancy__card__header__icon__delete:hover {
+    opacity: .7;
+}
+
+.vacancy__card__section-1 {
+    font-size: 105%;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.vacancy__card__section-1 p {
+    font-family: sans-serif;
+}
+
+.vacancy__card__section-2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.vacancy__card__section-2__part {
+    display: flex;
+    justify-content: start;
+    gap: 5px;
+    align-items: center;
+}
+
+.vacancy__card__section-2__part a {
+    transition: .5s;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+.vacancy__card__section-2__part a:hover {
+    color: #fff;
+}
+
+.vacancy__card__section-2__icon {
+    color: var(--blue-light-color);
+    width: 20px;
+    height: 20px;
+}
+
+.vacancy__card__section__footer {
+    display: flex;
+    justify-content: start;
+}
+
+.vacancy__card__footer-p {
+    color: var(--text-color);
+}
+
+.vacancy__button {
+    color: #fff;
+    font-size: 105%;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: var(--blue-light-color);
+    font-weight: bold;
+    transition: .5s;
+    cursor: pointer;
+    border: none;
+}
+
+.vacancy__button:hover {
+    opacity: .7;
+}
+
+.vacancy__card__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.vacancy__card__footer p {
+    color: var(--text-color);
+}
+
+.vacancy__card__footer-2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-color);
+}
+
+.vacancy__card__footer-2 p {
+    font-size: 70%;
+    font-family: "Inter", sans-serif;
+}
+
+@media (max-width: 1240px) {
+    .vacancy__card {
+        min-width: 400px;
+        max-width: 401px;
+        width: 100%;
+    }
+
+    .vacancy__card__header h3 {
+        font-size: 80%;
+    }
+
+    .vacancy__card__section-1 p {
+        font-size: 75%;
+    }
+
+    .vacancy__card__section-2__part a {
+        font-size: 80%;
+    }
+
+    .vacancy__card__section-2__part__icon {
+        width: 12px;
+        height: 12px;
+    }
+
+    .vacancy__card__footer p {
+        font-size: 80%;
+    }
+
+    .vacancy__button {
+        color: #fff;
+        font-size: 90%;
+        padding: 8px 15px;
+        border-radius: 5px;
+        background-color: var(--blue-light-color);
+        font-weight: bold;
+        transition: .5s;
+        cursor: pointer;
+        border: none;
+    }
+
+    .vacancy__card__footer-2 p {
+        font-size: 50%; 
+    }
+
+    .vacancy__card__header__icon {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .vacancy__cards {
+        justify-content: center;
+    }
+
+    .vacancy__card {
+        width: 100%;
+        min-width: 200px;
+    }
+}

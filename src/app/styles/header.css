@@ -30,12 +30,7 @@
 }
 
 .header-blok_section-1-part button {
-    padding: 5px 10px;
-    font-weight: bold;
-    cursor: pointer;
-    border: none;
-    font-size: 105%;
-    transition: .5s;
+    padding: 10px;
 }
 
 .header-blok_section-1-part button:hover {
@@ -55,7 +50,7 @@
 }
 
 .header-blok__section-1-part img {
-    width: 60px;
+    width: 200px;
     height: 50px;
     object-fit: cover;
 }
@@ -76,7 +71,7 @@
     padding: 10px 20px;
     font-size: 110%;
     transition: .5s;
-    background-color: var(--blue-color);
+    background-color: var(--blue-light-color);
     color: #fff;
     border: none;
     cursor: pointer;
@@ -115,6 +110,7 @@
 .header-blok__section-2-part__container-p1 {
     font-size: 250%;
     font-weight: bold;
+    font-family: "Inter", sans-serif;
 }
 
 @media (max-width: 830px) {

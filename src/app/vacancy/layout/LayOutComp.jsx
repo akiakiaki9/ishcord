@@ -1,173 +1,337 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { IoClose, IoShieldCheckmarkOutline } from "react-icons/io5";
 import axios from 'axios';
-import { FaRegHeart } from "react-icons/fa";
-import { isAuthorized } from '@/app/auth/cookies'; // Импорт функции для проверки авторизации
+import { FaSearch, FaFilter } from "react-icons/fa";
 import Link from 'next/link';
+import ApplyToVacancy from '../apply/ApplyToVacancy';
+import AddFavorite from './AddFavorite';
+import { MdFavoriteBorder } from 'react-icons/md';
 
-export default function LayOutComp({ data }) {
-    const [filters, setFilters] = useState({
-        city: '',
-        salary: '',
-        category: '',
-    });
-    const [favorites, setFavorites] = useState([]);
-    const [modalData, setModalData] = useState(null); // Для управления модальным окном
-    const [coverLetter, setCoverLetter] = useState(''); // Текст сопроводительного письма
+export default function LayOutComp() {
+  const [vacancies, setVacancies] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(localStorage.getItem('selectedCategory') || '');
+  const [selectedCity, setSelectedCity] = useState(localStorage.getItem('selectedCity') || '');
+  const [salary_from, setSalaryFrom] = useState(localStorage.getItem('salary_from') || '');
+  const [salary_to, setSalaryTo] = useState(localStorage.getItem('salary_to') || '');
+  const [age_from, setAgeFrom] = useState(localStorage.getItem('age_from') || '');
+  const [age_to, setAgeTo] = useState(localStorage.getItem('age_to') || '');
+  const [time_from, setTimeFrom] = useState(localStorage.getItem('time_from') || '');
+  const [time_to, setTimeTo] = useState(localStorage.getItem('time_to') || '');
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [genders, setGenders] = useState([]);
+  const [formats, setFormats] = useState([]);
+  const [format, setFormat] = useState(localStorage.getItem('format') || '');
+  const [schedules, setSchedules] = useState([]);
+  const [schedule, setSchedule] = useState(localStorage.getItem('schedule') || '');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(false);
+  const [resetMessage, setResetMessage] = useState(false);
 
-    const handleClick = () => {
-        if (isAuthorized()) {
-            return;
-        }
+  useEffect(() => {
+    const fetchCategoriesAndCities = async () => {
+      try {
+        const [categoriesRes, citiesRes, gendersRes, formatsRes, schedulesRes] = await Promise.all([
+          axios.get('http://127.0.0.1:8000/api/categories'),
+          axios.get('http://127.0.0.1:8000/api/cities'),
+          axios.get('http://127.0.0.1:8000/api/genders/'),
+          axios.get('http://127.0.0.1:8000/api/formats/'),
+          axios.get('http://127.0.0.1:8000/api/schedules/')
+        ]);
+
+        setCategories(categoriesRes.data);
+        setCities(citiesRes.data);
+        setGenders(gendersRes.data);
+        setFormats(formatsRes.data);
+        setSchedules(schedulesRes.data);
+      } catch (error) {
+        console.error('Ошибка при загрузке данных для фильтрации:', error);
+      }
     };
+    fetchCategoriesAndCities();
+  }, []);
 
-    const handleFilterChange = (e) => {
-        const { name, value } = e.target;
-        setFilters((prevFilters) => ({
-            ...prevFilters,
-            [name]: value,
-        }));
+  useEffect(() => {
+    const fetchVacancies = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/vacancies/', {
+          params: {
+            category: selectedCategory,
+            city: selectedCity,
+            salary_from: salary_from,
+            salary_to: salary_to,
+            time_from: time_from,
+            time_to: time_to,
+            gender: genders,
+            age_from: age_from,
+            age_to: age_to,
+            format: format,
+            schedule: schedule,
+          },
+        });
+        setVacancies(response.data);
+      } catch (error) {
+        console.error('Ошибка при загрузке вакансий:', error);
+      }
     };
+    fetchVacancies();
+  }, [selectedCategory, selectedCity, salary_from, salary_to, age_from, age_to, genders, time_from, time_to, format, schedule]);
 
-    const handleFavoriteClick = async (vacancy) => {
-        try {
-            const response = await axios.post('http://127.0.0.1:8000/favorites', {
-                id: vacancy.id,
-                title: vacancy.title,
-                city: vacancy.city,
-                salary: vacancy.salary,
-                category: vacancy.category,
-            });
-            if (response.status === 200) {
-                setFavorites((prev) => [...prev, vacancy.id]);
-            }
-        } catch (error) {
-            console.error('Ошибка при добавлении в избранное:', error);
-        }
-    };
+  const handleSaveFilters = () => {
+    localStorage.setItem('selectedCategory', selectedCategory);
+    localStorage.setItem('selectedCity', selectedCity);
+    localStorage.setItem('salary_from', salary_from);
+    localStorage.setItem('salary_to', salary_to);
+    localStorage.setItem('age_from', age_from);
+    localStorage.setItem('age_to', age_to);
+    localStorage.setItem('time_from', time_from);
+    localStorage.setItem('time_to', time_to);
+    localStorage.setItem('format', format);
+    localStorage.setItem('schedule', schedule);
+    setSuccessMessage(true);
+    setIsModalOpen(false);
+  };
 
-    const handleApplyClick = (vacancy) => {
-        setModalData(vacancy); // Открытие модального окна
-    };
+  const handleResetFilters = () => {
+    localStorage.clear();
+    setSelectedCategory('');
+    setSelectedCity('');
+    setSalaryFrom('');
+    setSalaryTo('');
+    setAgeFrom('');
+    setAgeTo('');
+    setTimeFrom('');
+    setTimeTo('');
+    setFormat('');
+    setSchedule('');
+    setResetMessage(true);
+  };
 
-    const handleSendApplication = async () => {
-        try {
-            const response = await axios.post('http://127.0.0.1:8000/applications', {
-                vacancyId: modalData.id,
-                coverLetter,
-            });
-            if (response.status === 200) {
-                alert('Ваш отклик отправлен!');
-                setModalData(null); // Закрытие модального окна
-                setCoverLetter(''); // Очистка поля ввода
-            }
-        } catch (error) {
-            console.error('Ошибка при отправке отклика:', error);
-        }
-    };
-
-    const filteredData = Array.isArray(data)
-        ? data.filter((vacancy) => {
-            const matchesCity = filters.city ? vacancy.city === filters.city : true;
-            const matchesSalary = filters.salary ? vacancy.salary >= Number(filters.salary) : true;
-            const matchesCategory = filters.category ? vacancy.category === filters.category : true;
-            return matchesCity && matchesSalary && matchesCategory;
-        })
-        : [];
-
-    if (!data) {
-        return <div className='layout'><p>Загрузка данных...</p></div>;
-    }
-
-    return (
-        <div className='layout'>
-            <div className="layout-filters">
-                <label>
-                    Город:
-                    <select name="city" value={filters.city} onChange={handleFilterChange}>
-                        <option value="">Все</option>
-                        <option value="Бухара">Бухара</option>
-                        <option value="Ташкент">Ташкент</option>
-                        <option value="Самарканд">Самарканд</option>
-                    </select>
-                </label>
-
-                <label>
-                    Минимальная зарплата:
-                    <input
-                        type="number"
-                        name="salary"
-                        value={filters.salary}
-                        onChange={handleFilterChange}
-                        placeholder="Введите сумму"
-                    />
-                </label>
-
-                <label>
-                    Категория:
-                    <select name="category" value={filters.category} onChange={handleFilterChange}>
-                        <option value="">Все</option>
-                        <option value="IT">IT</option>
-                        <option value="Маркетинг">Маркетинг</option>
-                        <option value="Образование">Образование</option>
-                    </select>
-                </label>
+  return (
+    <div className="layout">
+      <div className="vacancy">
+        <div className="filters">
+          <div className="filters-blok">
+            <div className="filters-blok__section-1">
+              <input type="search" placeholder='Поиск' />
+              <FaSearch className='filters-blok__section-1__icon' />
             </div>
-
-            <div className="layout-blok">
-                {filteredData.length > 0 ? (
-                    filteredData.map((vacancy) => (
-                        <div key={vacancy.id} className="vacancy-card">
-                            <h3>{vacancy.title}</h3>
-                            <p>Город: {vacancy.city}</p>
-                            <p>Зарплата: {vacancy.salary} UZS</p>
-                            <p>Категория: {vacancy.category}</p>
-                            <button
-                                onClick={() => handleFavoriteClick(vacancy)}
-                                style={{
-                                    backgroundColor: favorites.includes(vacancy.id) ? 'red' : 'gray',
-                                    color: '#fff',
-                                    border: 'none',
-                                    borderRadius: '50%',
-                                    cursor: 'pointer',
-                                    padding: '10px',
-                                }}
-                            >
-                                <FaRegHeart />
-                            </button>
-                            {isAuthorized() ? (
-                                <button onClick={() => handleApplyClick(vacancy)}>Откликнуться</button>
-                            ) : (
-                                <Link href="/log-in">
-                                    <button>Войти</button>
-                                </Link>
-                            )}
-                        </div>
-                    ))
-                ) : (
-                    <p>Нет вакансий, соответствующих выбранным фильтрам.</p>
-                )}
+            <div className='filters-blok__section-2' onClick={() => setIsModalOpen(true)}>
+              <p>Фильтры</p>
+              <FaFilter className='filters-blok__section-2__icon' />
             </div>
-
-            {/* Модальное окно */}
-            {modalData && (
-                <div className="modal">
-                    <div className="modal-content">
-                        <h3>Отклик на вакансию: {modalData.title}</h3>
-                        <textarea
-                            value={coverLetter}
-                            onChange={(e) => setCoverLetter(e.target.value)}
-                            placeholder="Введите сопроводительное письмо"
-                            rows="5"
-                            style={{ width: '100%' }}
-                        />
-                        <div className="modal-buttons">
-                            <button onClick={handleSendApplication}>Отправить</button>
-                            <button onClick={() => setModalData(null)}>Отмена</button>
-                        </div>
-                    </div>
-                </div>
-            )}
+          </div>
         </div>
-    );
+      </div>
+
+      {isModalOpen && (
+        <div className="filters-modal">
+          <div className="filters-modal__content">
+            <div className="filters-modal-blok">
+              <div className="filters-blok__content__header">
+                <h3>Фильтры</h3>
+                <IoClose className='filters-modal__close' onClick={() => setIsModalOpen(false)} />
+              </div>
+              <div className="filters-modal__section filters-modal__section-1">
+                <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+                  <option value="">Категория</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>{category.title}</option>
+                  ))}
+                </select>
+                <select value={selectedCity} onChange={(e) => setSelectedCity(e.target.value)}>
+                  <option value="">Город</option>
+                  {cities.map((city) => (
+                    <option key={city.id} value={city.id}>{city.title}</option>
+                  ))}
+                </select>
+                <select value={genders} onChange={(e) => setGenders(e.target.value)}>
+                  <option value="">Пол</option>
+                  {genders.map((item) => (
+                    <option key={item} value={item}>{item.title}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="filters-modal__section filters-modal__section-2">
+                <select value={format} onChange={(e) => setFormat(e.target.value)}>
+                  <option value="">Формат работы</option>
+                  {formats.map((format) => (
+                    <option key={format} value={format}>{format.title}</option>
+                  ))}
+                </select>
+                <select value={schedule} onChange={(e) => setSchedule(e.target.value)}>
+                  <option value="">График работы</option>
+                  {schedules.map((schedule) => (
+                    <option key={schedule} value={schedule}>{schedule.title}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="filters-modal__section">
+                <div>
+                  <label>Зарплата от:</label>
+                  <input type="number" value={salary_from} onChange={(e) => setSalaryFrom(e.target.value)} placeholder="Минимальная зарплата" />
+                </div>
+                <div>
+                  <input type="number" value={salary_to} onChange={(e) => setSalaryTo(e.target.value)} placeholder="Максимальная зарплата" />
+                </div>
+              </div>
+              <div className="filters-modal__section">
+                <div>
+                  <label>Возраст от:</label>
+                  <input type="number" value={age_from} onChange={(e) => setAgeFrom(e.target.value)} placeholder="Возраст от" min={16} max={60} />
+                  <div>
+                    <input type="number" value={age_to} onChange={(e) => setAgeTo(e.target.value)} placeholder="Возраст до" min={16} max={60} />
+                  </div>
+                </div>
+              </div>
+              <div className="filters-modal__section">
+                <div>
+                  <label>Время от:</label>
+                  <input type="number" value={time_from} onChange={(e) => setTimeFrom(e.target.value)} placeholder="Время от" />
+                </div>
+                <div>
+                  <input type="number" value={time_to} onChange={(e) => setTimeTo(e.target.value)} placeholder="Время до" />
+                </div>
+              </div>
+              <div className="filters-modal__footer">
+                <button className='filter-modal__footer__button1' onClick={handleSaveFilters}>Сохранить фильтры</button>
+                <button className='filter-modal__footer__button2' onClick={handleResetFilters}>Сбросить</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {vacancies.length === 0 ? (
+        <div className='vacancy__cards'>
+          <div className="vacancy__card">
+            <div className="vacancy__card__header">
+              <Link href='/'><h3>Собиратель голосов общественного мнения</h3></Link>
+            </div>
+            <div className="vacancy__card__section-1">
+              <p>3 000 000 - 5 000 000 UZS</p>
+            </div>
+            <div className="vacancy__card__section-2">
+              <div className="vacancy__card__section-2__part">
+                <Link href='/'><p>ООО СВОИ</p></Link>
+                <IoShieldCheckmarkOutline className='vacancy__card__section-2__icon' />
+              </div>
+            </div>
+            <div className="vacancy__card__footer">
+              <button className='vacancy__button'>Откликнуться</button>
+              <p>Ташкент</p>
+            </div>
+            <div className="vacancy__card__footer-2">
+              <p>Добавлено в 20:00 25 декабря</p>
+              <MdFavoriteBorder className='vacancy__card__header__icon' />
+            </div>
+          </div>
+          <div className="vacancy__card">
+            <div className="vacancy__card__header">
+              <Link href='/'><h3>Собиратель голосов общественного мнения</h3></Link>
+            </div>
+            <div className="vacancy__card__section-1">
+              <p>3 000 000 - 5 000 000 UZS</p>
+            </div>
+            <div className="vacancy__card__section-2">
+              <div className="vacancy__card__section-2__part">
+                <Link href='/'><p>ООО СВОИ</p></Link>
+                <IoShieldCheckmarkOutline className='vacancy__card__section-2__icon' />
+              </div>
+            </div>
+            <div className="vacancy__card__footer">
+              <button className='vacancy__button'>Откликнуться</button>
+              <p>Ташкент</p>
+            </div>
+            <div className="vacancy__card__footer-2">
+              <p>Добавлено в 20:00 25 декабря</p>
+              <MdFavoriteBorder className='vacancy__card__header__icon' />
+            </div>
+          </div>
+          <div className="vacancy__card">
+            <div className="vacancy__card__header">
+              <Link href='/'><h3>Собиратель голосов общественного мнения</h3></Link>
+            </div>
+            <div className="vacancy__card__section-1">
+              <p>3 000 000 - 5 000 000 UZS</p>
+            </div>
+            <div className="vacancy__card__section-2">
+              <div className="vacancy__card__section-2__part">
+                <Link href='/'><p>ООО СВОИ</p></Link>
+                <IoShieldCheckmarkOutline className='vacancy__card__section-2__icon' />
+              </div>
+            </div>
+            <div className="vacancy__card__footer">
+              <button className='vacancy__button'>Откликнуться</button>
+              <p>Ташкент</p>
+            </div>
+            <div className="vacancy__card__footer-2">
+              <p>Добавлено в 20:00 25 декабря</p>
+              <MdFavoriteBorder className='vacancy__card__header__icon' />
+            </div>
+          </div>
+          <div className="vacancy__card">
+            <div className="vacancy__card__header">
+              <Link href='/'><h3>Собиратель голосов общественного мнения</h3></Link>
+            </div>
+            <div className="vacancy__card__section-1">
+              <p>3 000 000 - 5 000 000 UZS</p>
+            </div>
+            <div className="vacancy__card__section-2">
+              <div className="vacancy__card__section-2__part">
+                <Link href='/'><p>ООО СВОИ</p></Link>
+                <IoShieldCheckmarkOutline className='vacancy__card__section-2__icon' />
+              </div>
+            </div>
+            <div className="vacancy__card__footer">
+              <button className='vacancy__button'>Откликнуться</button>
+              <p>Ташкент</p>
+            </div>
+            <div className="vacancy__card__footer-2">
+              <p>Добавлено в 20:00 25 декабря</p>
+              <MdFavoriteBorder className='vacancy__card__header__icon' />
+            </div>
+          </div>
+        </div>
+      ) : (
+        vacancies.map((vacancy) => (
+          <div key={vacancy.id} className="vacancy__card">
+            <div className="vacancy__card__header">
+              <Link href={`/vacancy/${vacancy.id}`}><h3>{vacancy.title}</h3></Link>
+              <AddFavorite disabled={!isAuthorized} data={vacancy} />
+            </div>
+            <div className="vacancy__card__section-1">
+              <p>Зарплата: {vacancy.salary_from} - {vacancy.salary_to} UZS</p>
+            </div>
+            <div className="vacancy__card__section-2">
+              <div className="vacancy__card__section-2__part">
+                <Link href={`/vacancy/employeer/${vacancy.id}`}><p>ООО СВОИ</p></Link>
+                <IoShieldCheckmarkOutline className='vacancy__card__section-2__icon' />
+              </div>
+              <div className="vacancy__card__section-2__part">
+                <p>{vacancy.city}</p>
+              </div>
+              <div className="vacancy__card__footer">
+                <ApplyToVacancy data={vacancy} disabled={!isAuthorized} />
+              </div>
+            </div>
+          </div>
+        ))
+      )}
+      {successMessage && (
+        <div className="successMessage">
+          <p>Фильтры сохранены!</p>
+          <div className="successMessage-bar"></div>
+        </div>
+      )}
+      {resetMessage && (
+        <div className="errormessage">
+          <p>Фильтры сброшены!</p>
+          <div className="errormessage-bar"></div>
+        </div>
+      )}
+    </div>
+  );
 };
