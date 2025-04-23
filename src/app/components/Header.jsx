@@ -41,26 +41,8 @@ export default function Header() {
           compaines: 300
         };
 
-        const duration = 3000;
-        const startTime = performance.now();
-
-        const animate = (time) => {
-          const elapsed = time - startTime;
-          const progress = Math.min(elapsed / duration, 1);
-          const easedProgress = 1 - Math.pow(1 - progress, 3);
-
-          setCountes({
-            vacancies: Math.floor(targetCounts.vacancies * easedProgress),
-            users: Math.floor(targetCounts.users * easedProgress),
-            compaines: Math.floor(targetCounts.compaines * easedProgress),
-          });
-
-          if (progress < 1) {
-            requestAnimationFrame(animate);
-          }
-        };
-
-        requestAnimationFrame(animate);
+        // Устанавливаем значения сразу, без анимации
+        setCountes(targetCounts);
       } catch (error) {
         console.error('Ошибка при получении данных с hh.ru:', error);
       }
@@ -102,4 +84,4 @@ export default function Header() {
       </div>
     </div>
   );
-}
+};
