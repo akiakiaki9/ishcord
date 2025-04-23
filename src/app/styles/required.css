@@ -1,0 +1,42 @@
+.required {
+    padding: 20px 100px;
+}
+
+.required-blok {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.required-blok h1 {
+    margin-bottom: 10px;
+}
+
+.required-blok__section h2 {
+    margin-bottom: 5px;
+}
+
+.required-blok__section ul li {
+    list-style: none;
+    font-size: 95%;
+    line-height: 1.5;
+    font-family: "Inter", sans-serif;
+}
+
+@media (max-width: 1230px) {
+    .required {
+        padding: 15px 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .required-blok h1 {
+        font-size: 160%;
+    }
+    .required-blok__section h2 {
+        font-size: 110%;
+    }
+    .required-blok__section ul li {
+        font-size: 80%;
+    }
+}

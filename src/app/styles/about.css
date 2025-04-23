@@ -1,0 +1,109 @@
+.about {
+    padding: 30px 150px;
+}
+
+.about-blok {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.about-blok__section-1 {
+    width: 50%;
+}
+
+.about-blok__section-1 h1 {
+    max-width: 500px;
+    font-size: 250%;
+    color: var(--blue-dark-color);
+    margin-bottom: 20px;
+}
+
+.about-blok__section-1 p {
+    max-width: 500px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.about-blok__section-1 button {
+    width: 200px;
+    padding: 10px 20px;
+    font-size: 110%;
+    transition: .5s;
+    background-color: var(--blue-dark-color);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.about-blok__section-1 button:hover {
+    opacity: .7;
+}
+
+.about-blok__section-2 {
+    width: 50%;
+}
+
+.about-blok__section-2 img {
+    max-width: 500px;
+    width: 100%;
+    height: auto;
+}
+
+@media (max-width: 1025px) {
+    .about-blok__section-1 h1 {
+        font-size: 200%;
+    }
+}
+
+@media (max-width: 768px) {
+    .about {
+        padding: 30px 20px;
+    }
+    .about-blok {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        gap: 20px;
+    }
+    .about-blok__section-1 {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .about-blok__section-2 {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    .about-blok__section-2 img {
+        max-width: 300px;
+    }
+    .about-blok__section-1 h1 {
+        text-align: center;
+    }
+    .about-blok__section-1 p {
+        max-width: 500px;
+        line-height: 1.5;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    .about-blok__section-1 button {
+        width: 160px;
+        padding: 10px 20px;
+        font-size: 100%;
+    }
+}
+
+@media (max-width: 570px) {
+    .about-blok__section-1 h1 {
+        font-size: 160%;
+    }
+    .about-blok__section-1 p {
+        font-size: 90%;
+    }
+}

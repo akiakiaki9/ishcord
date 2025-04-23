@@ -19,7 +19,7 @@ export default function LayOutComp() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
-
+  const [uzbekistanAreaId, setUzbekistanAreaId] = useState(null);
 
   useEffect(() => {
     const fetchCategoriesAndCities = async () => {
@@ -29,8 +29,12 @@ export default function LayOutComp() {
         setCategories(Array.isArray(categoriesData) ? categoriesData : []);
 
         const citiesRes = await axios.get('https://api.hh.ru/areas');
-        const citiesData = citiesRes.data || [];
-        setCities(Array.isArray(citiesData) ? citiesData : []);
+        const allAreas = citiesRes.data;
+        const uzbekistan = allAreas.find((area) => area.name.toLowerCase().includes('узбекистан'));
+        if (uzbekistan) {
+          setUzbekistanAreaId(uzbekistan.id);
+          setCities(uzbekistan.areas || []);
+        }
       } catch (error) {
         console.error('Ошибка при загрузке данных для фильтрации:', error);
         setCategories([]);
@@ -41,21 +45,26 @@ export default function LayOutComp() {
     fetchCategoriesAndCities();
   }, []);
 
-
-
   useEffect(() => {
     const fetchVacancies = async () => {
       try {
-        const params = {};
+        const params = {
+          page: page - 1,
+          per_page: 10,
+        };
         if (selectedCategory) params.professional_role = selectedCategory;
         if (salary_from) params.salary_from = salary_from;
         if (salary_to) params.salary_to = salary_to;
         if (format) params.employment = format;
         if (schedule) params.schedule = schedule;
         if (searchTerm) params.text = searchTerm;
+        if (selectedCity) {
+          params.area = selectedCity;
+        } else if (uzbekistanAreaId) {
+          params.area = uzbekistanAreaId;
+        }
 
-        const { data } = await axios.get('https://api.hh.uz/vacancies');
-        console.log(data);
+        const { data } = await axios.get('https://api.hh.ru/vacancies', { params });
 
         setVacancies(data.items || []);
         setTotalPages(Math.ceil((data.found || 0) / 10));
@@ -65,7 +74,7 @@ export default function LayOutComp() {
     };
 
     fetchVacancies();
-  }, [page, selectedCategory, salary_from, salary_to, format, schedule, searchTerm]);
+  }, [page, selectedCategory, salary_from, salary_to, format, schedule, searchTerm, selectedCity, uzbekistanAreaId]);
 
   const handleSaveFilters = () => {
     localStorage.setItem('selectedCategory', selectedCategory);

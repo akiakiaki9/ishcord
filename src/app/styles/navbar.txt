@@ -24,10 +24,6 @@
     text-decoration: none;
 }
 
-.navbar-blok__section-1 a {
-    text-decoration: none;
-}
-
 .navbar-blok__section-2 {
     display: flex;
     justify-content: start;
@@ -162,10 +158,6 @@
     text-decoration: none;
 }
 
-.navbar__container a {
-    text-decoration: none;
-}
-
 @media (max-width: 768px) {
 
     .navbar-blok {
@@ -174,8 +166,8 @@
 
     .navbar__container {
         display: flex;
-        justify-content: center;
-        gap: 15px;
+        justify-content: space-between;
+        gap: 5px;
         align-items: center;
         padding: 10px 5px;
     }

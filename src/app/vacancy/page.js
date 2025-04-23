@@ -1,12 +1,14 @@
 import React from 'react'
 import LayOutComp from './layout/LayOutComp'
-import NavbarComp from './navbar/NavbarComp'
+import Footer from '../components/Footer'
+import Navbar from '../components/Navbar'
 
-export default function Crm() {
+export default function page() {
   return (
     <div>
-      <NavbarComp />
+      <Navbar />
       <LayOutComp />
+      <Footer />
     </div>
   )
 };

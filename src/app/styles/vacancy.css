@@ -14,17 +14,19 @@
 .vacancy__card {
     display: flex;
     flex-direction: column;
-    background-color: var(--card-color);
+    background-color: #fff;
     padding: 20px;
     border-radius: 5px;
     min-width: 600px;
     max-width: 601px;
     width: 100%;
     transition: .3s;
+    box-shadow: 0px 0px 10px 1px rgba(181, 181, 181, 1);
+    border: 1px solid #ffffff00;
 }
 
 .vacancy__card:hover {
-    box-shadow: 0px 0px 10px 1px rgba(181, 181, 181, 1);
+    border-color: var(--blue-light-color);
 }
 
 .vacancy__card__header {
@@ -33,11 +35,12 @@
     align-items: center;
     margin-bottom: 20px;
     gap: 20px;
+    min-height: 50px;
 }
 
 .vacancy__card__header a {
     text-decoration: none;
-    color: #fff;
+    color: #000;
     transition: .5s;
     cursor: pointer;
 }
@@ -68,7 +71,7 @@
 .vacancy__card__section-1 {
     font-size: 105%;
     margin-bottom: 10px;
-    color: var(--text-color);
+    color: var(--card-color);
 }
 
 .vacancy__card__section-1 p {
@@ -93,12 +96,16 @@
     transition: .5s;
     cursor: pointer;
     text-decoration: none;
-    color: var(--text-color);
+    color: var(--card-color);
     font-weight: bold;
 }
 
 .vacancy__card__section-2__part a:hover {
-    color: #fff;
+    opacity: .5;
+}
+
+.vacancy__card__section-2__part p {
+    color: var(--card-color);
 }
 
 .vacancy__card__section-2__icon {
@@ -110,6 +117,18 @@
 .vacancy__card__section__footer {
     display: flex;
     justify-content: start;
+}
+
+.vacancy__card__footer__icon {
+    color: var(--blue-light-color);
+    transition: .5s;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+}
+
+.vacancy__card__footer__icon:hover {
+    opacity: .5;
 }
 
 .vacancy__card__footer-p {
@@ -211,9 +230,12 @@
     .vacancy__cards {
         justify-content: center;
     }
-
     .vacancy__card {
         width: 100%;
         min-width: 200px;
+    }
+    .vacancy__card__footer__icon {
+        width: 20px;
+        height: 20px;
     }
 }

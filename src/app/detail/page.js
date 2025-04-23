@@ -1,6 +1,6 @@
 import React from 'react'
 import DetailComp from './DetailComp'
-import NavbarComp from '../vacancy/navbar/NavbarComp'
+import NavbarComp from '../components/Navbar'
 
 export default function Detail() {
     return (

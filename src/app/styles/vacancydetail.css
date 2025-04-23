@@ -15,10 +15,10 @@
 }
 
 .vacancy-detail-blok__section-1__card {
-    background-color: var(--card-color);
-    border: 1px solid var(--text-color);
+    background-color: #fff;
     border-radius: 10px;
     padding: 30px;
+    box-shadow: 0px 0px 10px 1px rgba(181, 181, 181, 1);
 }
 
 .vacancy-detail-blok__section-1__card__header {
@@ -30,11 +30,13 @@
 
 .vacancy-detail-blok__section-1__card__header p {
     font-size: 85%;
-    color: var(--text-color);
+    color: var(--card-color);
+    opacity: .9;
 }
 
 .vacancy-detail-blok__section-1__card__header h1 {
-    color: #fff;
+    color: #000;
+    max-width: 550px;
 }   
 
 .vacancy-detail-blok__section-1__card__section-1 {
@@ -48,18 +50,20 @@
 .vacancy-detail-blok__section-1__card__section-1-p1 {
     font-size: 120%;
     font-family: sans-serif;
-    color: var(--blue-light-color);
+    color: var(--card-color);
+    opacity: .9;
 }
 
 .vacancy-detail-blok__section-1__card__section-1-p2 {
     font-size: 120%;
-    color: #fff;
+    color: #000;
 }
 
 .vacancy-detail-blok__section-1__card__section-1-p3 {
     font-weight: normal;
     font-size: 85%;
-    color: var(--text-color);
+    color: var(--card-color);
+    margin-bottom: 10px;
 }
 
 .vacancy-detail-blok__section-1__card__section-2 {
@@ -70,11 +74,11 @@
 }
 
 .vacancy-detail-blok__section-1__card__section-2 p {
-    color: var(--text-color);
+    color: var(--card-color);
 }
 
 .vacancy-detail-blok__section-1__card__section-2 p span {
-    color: #fff;
+    color: var(--card-color);
     font-weight: bold;
 }
 
@@ -94,20 +98,21 @@
 }
 
 .vacancy-detail-blok__section-1__description {
-    background-color: var(--card-color);
+    background-color: #fff;
+    box-shadow: 0px 0px 10px 1px rgba(181, 181, 181, 1);
     padding: 30px;
     border-radius: 10px;
     max-width: 800px;
 }
 
 .vacancy-detail-blok__section-1__description h3 {
-    color: #fff;
+    color: var(--blue-light-color);
 }
 
 .vacancy-detail-blok__section-1__description-p1 {
     margin-bottom: 20px;
     font-family: "Inter", sans-serif;
-    color: #fff;
+    color: #000;
 }
 
 .vacancy-detail-blok__section-1__description-p2 {
@@ -174,23 +179,62 @@
 }
 
 @media (max-width: 768px) {
+    .vacancy-detail-blok {
+        gap: 20px;
+    }
+    .vacancy-detail-blok__section-1 {
+        gap: 20px;
+    }
     .vacancy-detail-blok__section-1__card {
-        padding: 20px 10px;
+        padding: 20px 15px;
     }
     .vacancy-detail-blok__section-1__card__header h1 {
-        font-size: 170%;
+        font-size: 120%;
     }  
+    .vacancy-detail-blok__section-1__card__header p {
+        font-size: 65%;
+    }
+    .vacancy-detail-blok__section-1__card__section-1-p1 {
+        font-size: 100%;
+    }
+    .vacancy-detail-blok__section-1__card__section-1-p2 {
+        font-size: 100%;
+    }
+    .vacancy-detail-blok__section-1__card__section-1-p3 {
+        font-size: 65%;
+    }
     .vacancy-detail-blok__section-1__description {
-        padding: 20px 10px;
+        padding: 20px 15px;
     }
     .vacancy-detail-blok__section-1__card__footer {
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
         gap: 10px;
     }
+    .vacancy-detail-blok__section-1__card__footer__icon {
+        width: 25px;
+        height: 25px;
+    }
     .vacancy-detail-blok__section-2 {
         display: flex;
+        justify-content: center;
         margin: auto;
+    }
+    .vacancy-detail-blok__section-2__card__icon {
+        width: 20px;
+        height: 20px;
+    }
+    .vacancy-detail-blok__section-1__card__section-2 p {
+        font-size: 70%;
+    }
+    .vacancy-detail-blok__section-1__description-p1 {
+        font-size: 70%;
+    }
+    .vacancy-detail-blok__section-1__description-p2 {
+        font-size: 80%;
+    }
+    .vacancy-detail-blok__section-2__card__container h3 {
+        font-size: 90%;
     }
 }

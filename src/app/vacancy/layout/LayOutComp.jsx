@@ -2,11 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { IoClose, IoShieldCheckmarkOutline } from "react-icons/io5";
 import axios from 'axios';
-import { FaSearch, FaFilter } from "react-icons/fa";
+import { FaSearch, FaInfoCircle } from "react-icons/fa";
 import Link from 'next/link';
-import ApplyToVacancy from '../apply/ApplyToVacancy';
-import AddFavorite from './AddFavorite';
-import { MdFavoriteBorder } from 'react-icons/md';
 
 export default function LayOutComp() {
   const [vacancies, setVacancies] = useState([]);
@@ -16,81 +13,89 @@ export default function LayOutComp() {
   const [selectedCity, setSelectedCity] = useState(localStorage.getItem('selectedCity') || '');
   const [salary_from, setSalaryFrom] = useState(localStorage.getItem('salary_from') || '');
   const [salary_to, setSalaryTo] = useState(localStorage.getItem('salary_to') || '');
-  const [age_from, setAgeFrom] = useState(localStorage.getItem('age_from') || '');
-  const [age_to, setAgeTo] = useState(localStorage.getItem('age_to') || '');
-  const [time_from, setTimeFrom] = useState(localStorage.getItem('time_from') || '');
-  const [time_to, setTimeTo] = useState(localStorage.getItem('time_to') || '');
-  const [isAuthorized, setIsAuthorized] = useState(false);
-  const [genders, setGenders] = useState([]);
-  const [formats, setFormats] = useState([]);
   const [format, setFormat] = useState(localStorage.getItem('format') || '');
-  const [schedules, setSchedules] = useState([]);
   const [schedule, setSchedule] = useState(localStorage.getItem('schedule') || '');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [successMessage, setSuccessMessage] = useState(false);
-  const [resetMessage, setResetMessage] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [uzbekistanAreaId, setUzbekistanAreaId] = useState(null);
 
   useEffect(() => {
     const fetchCategoriesAndCities = async () => {
       try {
-        const [categoriesRes, citiesRes, gendersRes, formatsRes, schedulesRes] = await Promise.all([
-          axios.get('http://127.0.0.1:8000/api/categories'),
-          axios.get('http://127.0.0.1:8000/api/cities'),
-          axios.get('http://127.0.0.1:8000/api/genders/'),
-          axios.get('http://127.0.0.1:8000/api/formats/'),
-          axios.get('http://127.0.0.1:8000/api/schedules/')
-        ]);
+        const categoriesRes = await axios.get('https://api.hh.ru/professional_roles');
+        const categoriesData = categoriesRes.data?.categories || [];
+        setCategories(Array.isArray(categoriesData) ? categoriesData : []);
+        const citiesRes = await axios.get('https://api.hh.ru/areas');
+        const allAreas = citiesRes.data;
 
-        setCategories(categoriesRes.data);
-        setCities(citiesRes.data);
-        setGenders(gendersRes.data);
-        setFormats(formatsRes.data);
-        setSchedules(schedulesRes.data);
+        const uzbekistan = allAreas.find((area) =>
+          area.name.toLowerCase().includes('узбекистан')
+        );
+
+        if (uzbekistan) {
+          setUzbekistanAreaId(uzbekistan.id);
+          setCities(uzbekistan.areas || []);
+        }
       } catch (error) {
-        console.error('Ошибка при загрузке данных для фильтрации:', error);
+        setCategories([]);
+        setCities([]);
       }
     };
+
     fetchCategoriesAndCities();
   }, []);
 
   useEffect(() => {
     const fetchVacancies = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/vacancies/', {
-          params: {
-            category: selectedCategory,
-            city: selectedCity,
-            salary_from: salary_from,
-            salary_to: salary_to,
-            time_from: time_from,
-            time_to: time_to,
-            gender: genders,
-            age_from: age_from,
-            age_to: age_to,
-            format: format,
-            schedule: schedule,
-          },
-        });
-        setVacancies(response.data);
+        const areaId = selectedCity || uzbekistanAreaId;
+
+        const params = {
+          page: page - 1,
+          per_page: 10,
+          area: areaId,
+        };
+
+        if (selectedCategory) params.professional_role = selectedCategory;
+        if (salary_from) params.salary_from = salary_from;
+        if (salary_to) params.salary_to = salary_to;
+        if (format) params.employment = format;
+        if (schedule) params.schedule = schedule;
+        if (searchTerm) params.text = searchTerm;
+
+        const { data } = await axios.get('https://api.hh.ru/vacancies', { params });
+
+        setVacancies(data.items || []);
+        setTotalPages(Math.ceil((data.found || 0) / 10));
       } catch (error) {
-        console.error('Ошибка при загрузке вакансий:', error);
+        console.error('Ошибка при загрузке вакансий:');
       }
     };
-    fetchVacancies();
-  }, [selectedCategory, selectedCity, salary_from, salary_to, age_from, age_to, genders, time_from, time_to, format, schedule]);
+
+    if (selectedCity || uzbekistanAreaId) {
+      fetchVacancies();
+    }
+  }, [
+    page,
+    selectedCategory,
+    salary_from,
+    salary_to,
+    format,
+    schedule,
+    searchTerm,
+    selectedCity,
+    uzbekistanAreaId,
+  ]);
 
   const handleSaveFilters = () => {
     localStorage.setItem('selectedCategory', selectedCategory);
     localStorage.setItem('selectedCity', selectedCity);
     localStorage.setItem('salary_from', salary_from);
     localStorage.setItem('salary_to', salary_to);
-    localStorage.setItem('age_from', age_from);
-    localStorage.setItem('age_to', age_to);
-    localStorage.setItem('time_from', time_from);
-    localStorage.setItem('time_to', time_to);
     localStorage.setItem('format', format);
     localStorage.setItem('schedule', schedule);
-    setSuccessMessage(true);
     setIsModalOpen(false);
   };
 
@@ -100,14 +105,11 @@ export default function LayOutComp() {
     setSelectedCity('');
     setSalaryFrom('');
     setSalaryTo('');
-    setAgeFrom('');
-    setAgeTo('');
-    setTimeFrom('');
-    setTimeTo('');
     setFormat('');
     setSchedule('');
-    setResetMessage(true);
   };
+
+  const currencySymbols = { RUR: '₽', RUB: '₽', USD: '$', EUR: '€', UZS: 'сум', };
 
   return (
     <div className="layout">
@@ -115,17 +117,31 @@ export default function LayOutComp() {
         <div className="filters">
           <div className="filters-blok">
             <div className="filters-blok__section-1">
-              <input type="search" placeholder='Поиск' />
-              <FaSearch className='filters-blok__section-1__icon' />
+              <input
+                type="search"
+                placeholder="Поиск по вакансиям"
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <FaSearch className="filters-blok__section-1__icon" />
             </div>
-            <div className='filters-blok__section-2' onClick={() => setIsModalOpen(true)}>
-              <p>Фильтры</p>
-              <FaFilter className='filters-blok__section-2__icon' />
+            <div className='filters-blok__section-3'>
+              <select
+                value={selectedCity}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setSelectedCity(value);
+                  localStorage.setItem('selectedCity', value);
+                }}
+              >
+                <option value="">Все города</option>
+                {cities.map((city) => (
+                  <option key={city.id} value={city.id}>{city.name}</option>
+                ))}
+              </select>
             </div>
           </div>
         </div>
       </div>
-
       {isModalOpen && (
         <div className="filters-modal">
           <div className="filters-modal__content">
@@ -138,34 +154,28 @@ export default function LayOutComp() {
                 <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
                   <option value="">Категория</option>
                   {categories.map((category) => (
-                    <option key={category.id} value={category.id}>{category.title}</option>
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
                   ))}
                 </select>
                 <select value={selectedCity} onChange={(e) => setSelectedCity(e.target.value)}>
                   <option value="">Город</option>
                   {cities.map((city) => (
-                    <option key={city.id} value={city.id}>{city.title}</option>
-                  ))}
-                </select>
-                <select value={genders} onChange={(e) => setGenders(e.target.value)}>
-                  <option value="">Пол</option>
-                  {genders.map((item) => (
-                    <option key={item} value={item}>{item.title}</option>
+                    <option key={city.id} value={city.id}>{city.name}</option>
                   ))}
                 </select>
               </div>
               <div className="filters-modal__section filters-modal__section-2">
                 <select value={format} onChange={(e) => setFormat(e.target.value)}>
                   <option value="">Формат работы</option>
-                  {formats.map((format) => (
-                    <option key={format} value={format}>{format.title}</option>
-                  ))}
+                  <option value="full">Полная занятость</option>
+                  <option value="part">Частичная занятость</option>
                 </select>
                 <select value={schedule} onChange={(e) => setSchedule(e.target.value)}>
                   <option value="">График работы</option>
-                  {schedules.map((schedule) => (
-                    <option key={schedule} value={schedule}>{schedule.title}</option>
-                  ))}
+                  <option value="full">Полный день</option>
+                  <option value="flexible">Гибкий график</option>
                 </select>
               </div>
               <div className="filters-modal__section">
@@ -177,24 +187,6 @@ export default function LayOutComp() {
                   <input type="number" value={salary_to} onChange={(e) => setSalaryTo(e.target.value)} placeholder="Максимальная зарплата" />
                 </div>
               </div>
-              <div className="filters-modal__section">
-                <div>
-                  <label>Возраст от:</label>
-                  <input type="number" value={age_from} onChange={(e) => setAgeFrom(e.target.value)} placeholder="Возраст от" min={16} max={60} />
-                  <div>
-                    <input type="number" value={age_to} onChange={(e) => setAgeTo(e.target.value)} placeholder="Возраст до" min={16} max={60} />
-                  </div>
-                </div>
-              </div>
-              <div className="filters-modal__section">
-                <div>
-                  <label>Время от:</label>
-                  <input type="number" value={time_from} onChange={(e) => setTimeFrom(e.target.value)} placeholder="Время от" />
-                </div>
-                <div>
-                  <input type="number" value={time_to} onChange={(e) => setTimeTo(e.target.value)} placeholder="Время до" />
-                </div>
-              </div>
               <div className="filters-modal__footer">
                 <button className='filter-modal__footer__button1' onClick={handleSaveFilters}>Сохранить фильтры</button>
                 <button className='filter-modal__footer__button2' onClick={handleResetFilters}>Сбросить</button>
@@ -203,135 +195,59 @@ export default function LayOutComp() {
           </div>
         </div>
       )}
-
       {vacancies.length === 0 ? (
-        <div className='vacancy__cards'>
-          <div className="vacancy__card">
-            <div className="vacancy__card__header">
-              <Link href='/'><h3>Собиратель голосов общественного мнения</h3></Link>
-            </div>
-            <div className="vacancy__card__section-1">
-              <p>3 000 000 - 5 000 000 UZS</p>
-            </div>
-            <div className="vacancy__card__section-2">
-              <div className="vacancy__card__section-2__part">
-                <Link href='/'><p>ООО СВОИ</p></Link>
-                <IoShieldCheckmarkOutline className='vacancy__card__section-2__icon' />
-              </div>
-            </div>
-            <div className="vacancy__card__footer">
-              <button className='vacancy__button'>Откликнуться</button>
-              <p>Ташкент</p>
-            </div>
-            <div className="vacancy__card__footer-2">
-              <p>Добавлено в 20:00 25 декабря</p>
-              <MdFavoriteBorder className='vacancy__card__header__icon' />
-            </div>
-          </div>
-          <div className="vacancy__card">
-            <div className="vacancy__card__header">
-              <Link href='/'><h3>Собиратель голосов общественного мнения</h3></Link>
-            </div>
-            <div className="vacancy__card__section-1">
-              <p>3 000 000 - 5 000 000 UZS</p>
-            </div>
-            <div className="vacancy__card__section-2">
-              <div className="vacancy__card__section-2__part">
-                <Link href='/'><p>ООО СВОИ</p></Link>
-                <IoShieldCheckmarkOutline className='vacancy__card__section-2__icon' />
-              </div>
-            </div>
-            <div className="vacancy__card__footer">
-              <button className='vacancy__button'>Откликнуться</button>
-              <p>Ташкент</p>
-            </div>
-            <div className="vacancy__card__footer-2">
-              <p>Добавлено в 20:00 25 декабря</p>
-              <MdFavoriteBorder className='vacancy__card__header__icon' />
-            </div>
-          </div>
-          <div className="vacancy__card">
-            <div className="vacancy__card__header">
-              <Link href='/'><h3>Собиратель голосов общественного мнения</h3></Link>
-            </div>
-            <div className="vacancy__card__section-1">
-              <p>3 000 000 - 5 000 000 UZS</p>
-            </div>
-            <div className="vacancy__card__section-2">
-              <div className="vacancy__card__section-2__part">
-                <Link href='/'><p>ООО СВОИ</p></Link>
-                <IoShieldCheckmarkOutline className='vacancy__card__section-2__icon' />
-              </div>
-            </div>
-            <div className="vacancy__card__footer">
-              <button className='vacancy__button'>Откликнуться</button>
-              <p>Ташкент</p>
-            </div>
-            <div className="vacancy__card__footer-2">
-              <p>Добавлено в 20:00 25 декабря</p>
-              <MdFavoriteBorder className='vacancy__card__header__icon' />
-            </div>
-          </div>
-          <div className="vacancy__card">
-            <div className="vacancy__card__header">
-              <Link href='/'><h3>Собиратель голосов общественного мнения</h3></Link>
-            </div>
-            <div className="vacancy__card__section-1">
-              <p>3 000 000 - 5 000 000 UZS</p>
-            </div>
-            <div className="vacancy__card__section-2">
-              <div className="vacancy__card__section-2__part">
-                <Link href='/'><p>ООО СВОИ</p></Link>
-                <IoShieldCheckmarkOutline className='vacancy__card__section-2__icon' />
-              </div>
-            </div>
-            <div className="vacancy__card__footer">
-              <button className='vacancy__button'>Откликнуться</button>
-              <p>Ташкент</p>
-            </div>
-            <div className="vacancy__card__footer-2">
-              <p>Добавлено в 20:00 25 декабря</p>
-              <MdFavoriteBorder className='vacancy__card__header__icon' />
-            </div>
-          </div>
-        </div>
+        <p className='no-info'>Нет вакансий по этому городу</p>
       ) : (
-        vacancies.map((vacancy) => (
-          <div key={vacancy.id} className="vacancy__card">
-            <div className="vacancy__card__header">
-              <Link href={`/vacancy/${vacancy.id}`}><h3>{vacancy.title}</h3></Link>
-              <AddFavorite disabled={!isAuthorized} data={vacancy} />
-            </div>
-            <div className="vacancy__card__section-1">
-              <p>Зарплата: {vacancy.salary_from} - {vacancy.salary_to} UZS</p>
-            </div>
-            <div className="vacancy__card__section-2">
-              <div className="vacancy__card__section-2__part">
-                <Link href={`/vacancy/employeer/${vacancy.id}`}><p>ООО СВОИ</p></Link>
-                <IoShieldCheckmarkOutline className='vacancy__card__section-2__icon' />
+        <div className="vacancy__cards">
+          {vacancies.map((vacancy) => (
+            <div key={vacancy.id} className="vacancy__card">
+              <div className="vacancy__card__header">
+                <Link href={`/vacancy/${vacancy.id}`}>
+                  <h3>{vacancy.name}</h3>
+                </Link>
               </div>
-              <div className="vacancy__card__section-2__part">
-                <p>{vacancy.city}</p>
+              <div className="vacancy__card__section-1">
+                <p>
+                  Зарплата: {vacancy.salary
+                    ? vacancy.salary.from && vacancy.salary.to
+                      ? `${vacancy.salary.from.toLocaleString()} - ${vacancy.salary.to.toLocaleString()} ${currencySymbols[vacancy.salary.currency] || vacancy.salary.currency}`
+                      : vacancy.salary.from
+                        ? `${vacancy.salary.from.toLocaleString()} ${currencySymbols[vacancy.salary.currency] || vacancy.salary.currency}`
+                        : vacancy.salary.to
+                          ? `${vacancy.salary.to.toLocaleString()} ${currencySymbols[vacancy.salary.currency] || vacancy.salary.currency}`
+                          : 'Не указано'
+                    : 'Не указано'}
+                </p>
+              </div>
+              <div className="vacancy__card__section-2">
+                <div className="vacancy__card__section-2__part">
+                  <Link href={`/employer/${vacancy.employer.id}`} rel="noopener noreferrer">
+                    {vacancy.employer.name}
+                  </Link>
+                  <IoShieldCheckmarkOutline className='vacancy__card__section-2__icon' />
+                </div>
+                <div className="vacancy__card__section-2__part"><p>{vacancy.area.name}</p></div>
               </div>
               <div className="vacancy__card__footer">
-                <ApplyToVacancy data={vacancy} disabled={!isAuthorized} />
+                <a href={vacancy.alternate_url} target="_blank" rel="noopener noreferrer">
+                  <button className="vacancy__button">Отклик в hh</button>
+                </a>
+                <Link href={`vacancy/${vacancy.id}`}><FaInfoCircle className='vacancy__card__footer__icon' /></Link>
               </div>
             </div>
-          </div>
-        ))
-      )}
-      {successMessage && (
-        <div className="successMessage">
-          <p>Фильтры сохранены!</p>
-          <div className="successMessage-bar"></div>
+          ))}
         </div>
       )}
-      {resetMessage && (
-        <div className="errormessage">
-          <p>Фильтры сброшены!</p>
-          <div className="errormessage-bar"></div>
-        </div>
-      )}
+
+      <div className="pagination">
+        <button onClick={() => setPage((prevPage) => Math.max(prevPage - 1, 1))} disabled={page === 1}>
+          Назад
+        </button>
+        <span>{page} / {totalPages}</span>
+        <button onClick={() => setPage((prevPage) => Math.min(prevPage + 1, totalPages))} disabled={page === totalPages}>
+          След
+        </button>
+      </div>
     </div>
   );
 };

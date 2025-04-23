@@ -19,53 +19,90 @@ export default function LayOutComp() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
-
+  const [uzbekistanAreaId, setUzbekistanAreaId] = useState(null);
 
   useEffect(() => {
     const fetchCategoriesAndCities = async () => {
       try {
         const categoriesRes = await axios.get('https://api.hh.ru/professional_roles');
         const categoriesData = categoriesRes.data?.categories || [];
+  
+        console.log('🔹 Загруженные категории:', categoriesData);
         setCategories(Array.isArray(categoriesData) ? categoriesData : []);
-
+  
         const citiesRes = await axios.get('https://api.hh.ru/areas');
-        const citiesData = citiesRes.data || [];
-        setCities(Array.isArray(citiesData) ? citiesData : []);
+        const allAreas = citiesRes.data;
+  
+        const uzbekistan = allAreas.find((area) =>
+          area.name.toLowerCase().includes('узбекистан')
+        );
+  
+        console.log('🇺🇿 Найденный Узбекистан:', uzbekistan);
+  
+        if (uzbekistan) {
+          setUzbekistanAreaId(uzbekistan.id);
+          setCities(uzbekistan.areas || []);
+          console.log('🏙️ Города Узбекистана:', uzbekistan.areas);
+        } else {
+          console.warn('⚠️ Узбекистан не найден в списке регионов');
+        }
       } catch (error) {
-        console.error('Ошибка при загрузке данных для фильтрации:', error);
+        console.error('❌ Ошибка при загрузке данных для фильтрации:', error);
         setCategories([]);
         setCities([]);
       }
     };
-
+  
     fetchCategoriesAndCities();
   }, []);
-
-
+  
 
   useEffect(() => {
     const fetchVacancies = async () => {
       try {
-        const params = {};
+        const areaId = selectedCity || uzbekistanAreaId;
+  
+        const params = {
+          page: page - 1,
+          per_page: 10,
+          area: areaId,
+        };
+  
+        // Добавляем фильтры только если они есть
         if (selectedCategory) params.professional_role = selectedCategory;
         if (salary_from) params.salary_from = salary_from;
         if (salary_to) params.salary_to = salary_to;
         if (format) params.employment = format;
         if (schedule) params.schedule = schedule;
         if (searchTerm) params.text = searchTerm;
-
-        const { data } = await axios.get('https://api.hh.uz/vacancies');
-        console.log(data);
-
+  
+        console.log('📦 Отправляемые параметры запроса:', params);
+  
+        const { data } = await axios.get('https://api.hh.ru/vacancies', { params });
+  
+        console.log('📨 Найдено вакансий:', data.found);
         setVacancies(data.items || []);
         setTotalPages(Math.ceil((data.found || 0) / 10));
       } catch (error) {
-        console.error('Ошибка при загрузке вакансий:', error);
+        console.error('❌ Ошибка при загрузке вакансий:', error);
       }
     };
-
-    fetchVacancies();
-  }, [page, selectedCategory, salary_from, salary_to, format, schedule, searchTerm]);
+  
+    if (selectedCity || uzbekistanAreaId) {
+      fetchVacancies();
+    }
+  }, [
+    page,
+    selectedCategory,
+    salary_from,
+    salary_to,
+    format,
+    schedule,
+    searchTerm,
+    selectedCity,
+    uzbekistanAreaId,
+  ]);
+  
 
   const handleSaveFilters = () => {
     localStorage.setItem('selectedCategory', selectedCategory);
