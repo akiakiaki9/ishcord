@@ -9,17 +9,29 @@ export default function LayOutComp() {
   const [vacancies, setVacancies] = useState([]);
   const [categories, setCategories] = useState([]);
   const [cities, setCities] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(localStorage.getItem('selectedCategory') || '');
-  const [selectedCity, setSelectedCity] = useState(localStorage.getItem('selectedCity') || '');
-  const [salary_from, setSalaryFrom] = useState(localStorage.getItem('salary_from') || '');
-  const [salary_to, setSalaryTo] = useState(localStorage.getItem('salary_to') || '');
-  const [format, setFormat] = useState(localStorage.getItem('format') || '');
-  const [schedule, setSchedule] = useState(localStorage.getItem('schedule') || '');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCity, setSelectedCity] = useState('');
+  const [salary_from, setSalaryFrom] = useState('');
+  const [salary_to, setSalaryTo] = useState('');
+  const [format, setFormat] = useState('');
+  const [schedule, setSchedule] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [uzbekistanAreaId, setUzbekistanAreaId] = useState(null);
+
+  useEffect(() => {
+    // Проверяем, доступен ли localStorage
+    if (typeof window !== 'undefined') {
+      setSelectedCategory(localStorage.getItem('selectedCategory') || '');
+      setSelectedCity(localStorage.getItem('selectedCity') || '');
+      setSalaryFrom(localStorage.getItem('salary_from') || '');
+      setSalaryTo(localStorage.getItem('salary_to') || '');
+      setFormat(localStorage.getItem('format') || '');
+      setSchedule(localStorage.getItem('schedule') || '');
+    }
+  }, []);
 
   useEffect(() => {
     const fetchCategoriesAndCities = async () => {
@@ -90,17 +102,23 @@ export default function LayOutComp() {
   ]);
 
   const handleSaveFilters = () => {
-    localStorage.setItem('selectedCategory', selectedCategory);
-    localStorage.setItem('selectedCity', selectedCity);
-    localStorage.setItem('salary_from', salary_from);
-    localStorage.setItem('salary_to', salary_to);
-    localStorage.setItem('format', format);
-    localStorage.setItem('schedule', schedule);
+    // Проверяем, доступен ли localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('selectedCategory', selectedCategory);
+      localStorage.setItem('selectedCity', selectedCity);
+      localStorage.setItem('salary_from', salary_from);
+      localStorage.setItem('salary_to', salary_to);
+      localStorage.setItem('format', format);
+      localStorage.setItem('schedule', schedule);
+    }
     setIsModalOpen(false);
   };
 
   const handleResetFilters = () => {
-    localStorage.clear();
+    // Проверяем, доступен ли localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.clear();
+    }
     setSelectedCategory('');
     setSelectedCity('');
     setSalaryFrom('');
@@ -130,7 +148,10 @@ export default function LayOutComp() {
                 onChange={(e) => {
                   const value = e.target.value;
                   setSelectedCity(value);
-                  localStorage.setItem('selectedCity', value);
+                  // Проверяем, доступен ли localStorage
+                  if (typeof window !== 'undefined') {
+                    localStorage.setItem('selectedCity', value);
+                  }
                 }}
               >
                 <option value="">Все города</option>
@@ -238,7 +259,6 @@ export default function LayOutComp() {
           ))}
         </div>
       )}
-
       <div className="pagination">
         <button onClick={() => setPage((prevPage) => Math.max(prevPage - 1, 1))} disabled={page === 1}>
           Назад
