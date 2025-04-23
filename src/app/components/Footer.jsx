@@ -41,7 +41,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="footer-footer">
-        <p>IshCord 2025. Developed by <a href="https://akbarsoft.uz">Akbar Soft</a>, approved by <a href="https://hh.uz">hh</a>!</p>
+        <p>IshCord v0.1 2025. Developed by <a href="https://akbarsoft.uz">Akbar Soft</a>, approved by <a href="https://hh.uz">hh</a>!</p>
       </div>
     </footer>
   )
