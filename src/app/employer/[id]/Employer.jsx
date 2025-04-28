@@ -61,7 +61,9 @@ export default function Employer() {
                     <div className="companyprofile-blok__section-1__part">
                         <p className='companyprofile-blok__section-1__part__b'>Сфера деятельности</p>
                         <p className='companyprofile-blok__section-1__part__p companyprofile-blok__section-1__part__p-1'>
-                            {employer.industries?.name || 'Не указано'}
+                            {employer.industries && employer.industries.length > 0
+                                ? employer.industries.map((industry) => industry.name).join(', ')
+                                : 'Не указано'}
                         </p>
                     </div>
                     <div className="companyprofile-blok__section-1__part">

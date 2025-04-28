@@ -3,19 +3,17 @@ import Link from 'next/link'
 import React, { useEffect, useState, useRef } from 'react'
 
 export default function Header() {
-
   const headerRef = useRef(null);
   const [inView, setInView] = useState(false);
   const [counts, setCountes] = useState({ vacancies: 0, users: 0, compaines: 0 });
 
-  // Инициализация IntersectionObserver для отслеживания видимости элемента
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
-        setInView(entry.isIntersecting); // Устанавливаем состояние, если элемент виден
+        setInView(entry.isIntersecting);
       },
-      { threshold: 0.1 } // Будет срабатывать, когда хотя бы 10% элемента будет видны
+      { threshold: 0.1 }
     );
 
     if (headerRef.current) {
@@ -37,11 +35,10 @@ export default function Header() {
 
         const targetCounts = {
           vacancies: vacData.found || 0,
-          users: 100000, // Здесь можно оставить временное число или подключить другой источник
+          users: 100000,
           compaines: 300
         };
 
-        // Устанавливаем значения сразу, без анимации
         setCountes(targetCounts);
       } catch (error) {
         console.error('Ошибка при получении данных с hh.ru:', error);

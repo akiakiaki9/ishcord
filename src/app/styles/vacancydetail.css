@@ -80,6 +80,7 @@
 .vacancy-detail-blok__section-1__card__section-2 p span {
     color: var(--card-color);
     font-weight: bold;
+    font-family: "Inter", sans-serif;
 }
 
 .vacancy-detail-blok__section-1__card__footer {
@@ -148,8 +149,9 @@
 }
 
 .vacancy-detail-blok__section-2__card img {
-    width: 50px;
+    width: 150px;
     height: 50px;
+    object-fit: cover;
 }
 
 .vacancy-detail-blok__section-2__card__container {

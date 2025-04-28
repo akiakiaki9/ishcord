@@ -1,9 +1,10 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import { IoClose, IoShieldCheckmarkOutline } from "react-icons/io5";
+import React, { useState, useEffect, useRef } from 'react';
+import { IoShieldCheckmarkOutline } from "react-icons/io5";
 import axios from 'axios';
 import { FaSearch, FaInfoCircle } from "react-icons/fa";
 import Link from 'next/link';
+import { IoIosArrowDown } from "react-icons/io";
 
 export default function LayOutComp() {
   const [vacancies, setVacancies] = useState([]);
@@ -15,14 +16,17 @@ export default function LayOutComp() {
   const [salary_to, setSalaryTo] = useState('');
   const [format, setFormat] = useState('');
   const [schedule, setSchedule] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [uzbekistanAreaId, setUzbekistanAreaId] = useState(null);
+  const [searchCityTerm, setSearchCityTerm] = useState('');
+  const [showCityList, setShowCityList] = useState(false);
+  const [sortNewFirst, setSortNewFirst] = useState(false);
+
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
-    // Проверяем, доступен ли localStorage
     if (typeof window !== 'undefined') {
       setSelectedCategory(localStorage.getItem('selectedCategory') || '');
       setSelectedCity(localStorage.getItem('selectedCity') || '');
@@ -30,6 +34,8 @@ export default function LayOutComp() {
       setSalaryTo(localStorage.getItem('salary_to') || '');
       setFormat(localStorage.getItem('format') || '');
       setSchedule(localStorage.getItem('schedule') || '');
+      setSortNewFirst(localStorage.getItem('sortNewFirst') === 'true');
+      setPage(parseInt(localStorage.getItem('currentPage')) || 1);
     }
   }, []);
 
@@ -39,6 +45,7 @@ export default function LayOutComp() {
         const categoriesRes = await axios.get('https://api.hh.ru/professional_roles');
         const categoriesData = categoriesRes.data?.categories || [];
         setCategories(Array.isArray(categoriesData) ? categoriesData : []);
+
         const citiesRes = await axios.get('https://api.hh.ru/areas');
         const allAreas = citiesRes.data;
 
@@ -49,6 +56,14 @@ export default function LayOutComp() {
         if (uzbekistan) {
           setUzbekistanAreaId(uzbekistan.id);
           setCities(uzbekistan.areas || []);
+
+          const savedCityId = localStorage.getItem('selectedCity');
+          if (savedCityId) {
+            const savedCity = uzbekistan.areas.find(city => city.id === savedCityId);
+            if (savedCity) {
+              setSearchCityTerm(savedCity.name);
+            }
+          }
         }
       } catch (error) {
         setCategories([]);
@@ -66,8 +81,9 @@ export default function LayOutComp() {
 
         const params = {
           page: page - 1,
-          per_page: 10,
+          per_page: 20,
           area: areaId,
+          order_by: sortNewFirst ? 'publication_time' : undefined,
         };
 
         if (selectedCategory) params.professional_role = selectedCategory;
@@ -82,7 +98,7 @@ export default function LayOutComp() {
         setVacancies(data.items || []);
         setTotalPages(Math.ceil((data.found || 0) / 10));
       } catch (error) {
-        console.error('Ошибка при загрузке вакансий:');
+        console.error('Ошибка при загрузке вакансий.');
       }
     };
 
@@ -99,23 +115,15 @@ export default function LayOutComp() {
     searchTerm,
     selectedCity,
     uzbekistanAreaId,
+    sortNewFirst,
   ]);
 
-  const handleSaveFilters = () => {
-    // Проверяем, доступен ли localStorage
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('selectedCategory', selectedCategory);
-      localStorage.setItem('selectedCity', selectedCity);
-      localStorage.setItem('salary_from', salary_from);
-      localStorage.setItem('salary_to', salary_to);
-      localStorage.setItem('format', format);
-      localStorage.setItem('schedule', schedule);
-    }
-    setIsModalOpen(false);
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    localStorage.setItem('currentPage', newPage); // Сохраняем текущую страницу в localStorage
   };
 
   const handleResetFilters = () => {
-    // Проверяем, доступен ли localStorage
     if (typeof window !== 'undefined') {
       localStorage.clear();
     }
@@ -125,6 +133,26 @@ export default function LayOutComp() {
     setSalaryTo('');
     setFormat('');
     setSchedule('');
+    setSortNewFirst(false);
+    setPage(1); // Сбрасываем страницу на 1
+  };
+
+  const handleSortNewFirst = () => {
+    const newState = !sortNewFirst;
+    setSortNewFirst(newState);
+    localStorage.setItem('sortNewFirst', newState);
+  };
+
+  const handleSalaryFromChange = (e) => {
+    const value = e.target.value;
+    setSalaryFrom(value);
+    localStorage.setItem('salary_from', value);
+  };
+
+  const handleSalaryToChange = (e) => {
+    const value = e.target.value;
+    setSalaryTo(value);
+    localStorage.setItem('salary_to', value);
   };
 
   const currencySymbols = { RUR: '₽', RUB: '₽', USD: '$', EUR: '€', UZS: 'сум', };
@@ -142,80 +170,73 @@ export default function LayOutComp() {
               />
               <FaSearch className="filters-blok__section-1__icon" />
             </div>
-            <div className='filters-blok__section-3'>
-              <select
-                value={selectedCity}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setSelectedCity(value);
-                  // Проверяем, доступен ли localStorage
-                  if (typeof window !== 'undefined') {
-                    localStorage.setItem('selectedCity', value);
-                  }
-                }}
-              >
-                <option value="">Все города</option>
-                {cities.map((city) => (
-                  <option key={city.id} value={city.id}>{city.name}</option>
-                ))}
-              </select>
+            <div className="filters-blok__section-2">
+              <div className='filters-blok__section-2__part-1'>
+                <input
+                  type="number"
+                  placeholder="Зарплата от"
+                  value={salary_from}
+                  onChange={handleSalaryFromChange}
+                />
+                <input
+                  type="number"
+                  placeholder="Зарплата до"
+                  value={salary_to}
+                  onChange={handleSalaryToChange}
+                />
+              </div>
+              <div className='filters-blok__section-2__part-2'>
+                <button onClick={handleSortNewFirst} className={`filters-blok__section-2__part-2__button ${sortNewFirst ? 'active' : ''}`}>
+                  Сначала новые
+                </button>
+                <div>
+                  <input
+                    type="text"
+                    placeholder="Поиск города"
+                    value={searchCityTerm}
+                    onChange={(e) => {
+                      setSearchCityTerm(e.target.value);
+                      setShowCityList(true);
+                    }}
+                    onFocus={() => setShowCityList(true)}
+                    onBlur={() => setTimeout(() => setShowCityList(false), 200)}
+                  />
+                  <IoIosArrowDown className='filters-blok__section-2__icon' />
+                </div>
+                {showCityList && (
+                  <ul className="city-dropdown" ref={dropdownRef}>
+                    <li onClick={() => {
+                      setSelectedCity('');
+                      setSearchCityTerm('');
+                      localStorage.setItem('selectedCity', '');
+                      setShowCityList(false);
+                    }}
+                    >
+                      Все города
+                    </li>
+                    {cities.filter(city => city.name.toLowerCase().includes(searchCityTerm.toLowerCase()))
+                      .map(city => (
+                        <li
+                          key={city.id}
+                          onClick={() => {
+                            setSelectedCity(city.id);
+                            setSearchCityTerm(city.name);
+                            localStorage.setItem('selectedCity', city.id);
+                            setShowCityList(false);
+                          }}
+                        >
+                          {city.name}
+                        </li>
+                      ))
+                    }
+                  </ul>
+                )}
+              </div>
             </div>
+
           </div>
         </div>
       </div>
-      {isModalOpen && (
-        <div className="filters-modal">
-          <div className="filters-modal__content">
-            <div className="filters-modal-blok">
-              <div className="filters-blok__content__header">
-                <h3>Фильтры</h3>
-                <IoClose className='filters-modal__close' onClick={() => setIsModalOpen(false)} />
-              </div>
-              <div className="filters-modal__section filters-modal__section-1">
-                <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
-                  <option value="">Категория</option>
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
-                <select value={selectedCity} onChange={(e) => setSelectedCity(e.target.value)}>
-                  <option value="">Город</option>
-                  {cities.map((city) => (
-                    <option key={city.id} value={city.id}>{city.name}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="filters-modal__section filters-modal__section-2">
-                <select value={format} onChange={(e) => setFormat(e.target.value)}>
-                  <option value="">Формат работы</option>
-                  <option value="full">Полная занятость</option>
-                  <option value="part">Частичная занятость</option>
-                </select>
-                <select value={schedule} onChange={(e) => setSchedule(e.target.value)}>
-                  <option value="">График работы</option>
-                  <option value="full">Полный день</option>
-                  <option value="flexible">Гибкий график</option>
-                </select>
-              </div>
-              <div className="filters-modal__section">
-                <div>
-                  <label>Зарплата от:</label>
-                  <input type="number" value={salary_from} onChange={(e) => setSalaryFrom(e.target.value)} placeholder="Минимальная зарплата" />
-                </div>
-                <div>
-                  <input type="number" value={salary_to} onChange={(e) => setSalaryTo(e.target.value)} placeholder="Максимальная зарплата" />
-                </div>
-              </div>
-              <div className="filters-modal__footer">
-                <button className='filter-modal__footer__button1' onClick={handleSaveFilters}>Сохранить фильтры</button>
-                <button className='filter-modal__footer__button2' onClick={handleResetFilters}>Сбросить</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
       {vacancies.length === 0 ? (
         <p className='no-info'>Нет вакансий по этому городу</p>
       ) : (
@@ -228,16 +249,15 @@ export default function LayOutComp() {
                 </Link>
               </div>
               <div className="vacancy__card__section-1">
-                <p>
-                  Зарплата: {vacancy.salary
-                    ? vacancy.salary.from && vacancy.salary.to
-                      ? `${vacancy.salary.from.toLocaleString()} - ${vacancy.salary.to.toLocaleString()} ${currencySymbols[vacancy.salary.currency] || vacancy.salary.currency}`
-                      : vacancy.salary.from
-                        ? `${vacancy.salary.from.toLocaleString()} ${currencySymbols[vacancy.salary.currency] || vacancy.salary.currency}`
-                        : vacancy.salary.to
-                          ? `${vacancy.salary.to.toLocaleString()} ${currencySymbols[vacancy.salary.currency] || vacancy.salary.currency}`
-                          : 'Не указано'
-                    : 'Не указано'}
+                <p>Зарплата: {vacancy.salary
+                  ? vacancy.salary.from && vacancy.salary.to
+                    ? `${vacancy.salary.from.toLocaleString()} - ${vacancy.salary.to.toLocaleString()} ${currencySymbols[vacancy.salary.currency] || vacancy.salary.currency}`
+                    : vacancy.salary.from
+                      ? `${vacancy.salary.from.toLocaleString()} ${currencySymbols[vacancy.salary.currency] || vacancy.salary.currency}`
+                      : vacancy.salary.to
+                        ? `${vacancy.salary.to.toLocaleString()} ${currencySymbols[vacancy.salary.currency] || vacancy.salary.currency}`
+                        : 'Не указано'
+                  : 'Не указано'}
                 </p>
               </div>
               <div className="vacancy__card__section-2">
@@ -260,13 +280,27 @@ export default function LayOutComp() {
         </div>
       )}
       <div className="pagination">
-        <button onClick={() => setPage((prevPage) => Math.max(prevPage - 1, 1))} disabled={page === 1}>
-          Назад
-        </button>
-        <span>{page} / {totalPages}</span>
-        <button onClick={() => setPage((prevPage) => Math.min(prevPage + 1, totalPages))} disabled={page === totalPages}>
-          След
-        </button>
+        <button onClick={() => handlePageChange(Math.max(page - 1, 1))} disabled={page === 1}>Назад</button>
+        <button onClick={() => handlePageChange(1)} className={page === 1 ? 'active' : ''}>1</button>
+        {page > 3 && <span>...</span>}
+        {Array.from({ length: 5 }, (_, i) => {
+          const pageNumber = page - 2 + i;
+          if (pageNumber > 1 && pageNumber < totalPages) {
+            return (
+              <button key={pageNumber} onClick={() => handlePageChange(pageNumber)} className={page === pageNumber ? 'active' : ''}>
+                {pageNumber}
+              </button>
+            );
+          }
+          return null;
+        })}
+        {page < totalPages - 2 && <span>...</span>}
+        {totalPages > 1 && (
+          <button onClick={() => handlePageChange(totalPages)} className={page === totalPages ? 'active' : ''}>
+            {totalPages}
+          </button>
+        )}
+        <button onClick={() => handlePageChange(Math.min(page + 1, totalPages))} disabled={page === totalPages}>След</button>
       </div>
     </div>
   );

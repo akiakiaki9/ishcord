@@ -15,17 +15,18 @@
     gap: 5px;
     align-items: center;
     padding: 10px;
-    border-radius: 5px;
-    border: 1px solid var(--bg-light-color);
+    border-radius: 2px;
+    border: 2px solid var(--bg-light-color);
 }
 
 .filters-blok__section-1 input {
     font-size: 105%;
-    padding: 5px 10px;
+    padding: 5px;
     outline: none;
     min-width: 250px;
-    border-radius: 5px;
+    border-radius: 2px;
     border: none;
+    font-family: "Inter", sans-serif;
 }
 
 .filters-blok__section-1__icon {
@@ -36,151 +37,105 @@
 
 .filters-blok__section-2 {
     display: flex;
-    justify-content: start;
-    gap: 5px;
-    align-items: center;
-    background-color: var(--bg-light-color);
-    border: 1px solid var(--bg-light-color);
-    padding: 5px 10px;
-    border-radius: 5px;
-    transition: .5s;
-    cursor: pointer;
-}
-
-.filters-blok__section-2:hover {
-    opacity: .6;
-}
-
-.filters-blok__section-2 p {
-    font-weight: bold;
-}
-
-.filters-blok__section-3 select {
-    font-weight: 600;
-    padding: 10px 2px; 
-}
-
-.filters-blok__section-3 select option {
-    font-weight: 600;
-}
-
-.filters-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-    display: flex;
-    flex-direction: column;
-}
-
-.filters-modal__content {
-    display: flex;
     flex-direction: column;
     gap: 10px;
-    background-color: #fff;
-    padding: 20px;
-    max-width: 600px;
-    width: 100%;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    overflow-y: auto;
-    margin: 20px 10px;
+    position: relative;
 }
 
-.filters-blok__content__header {
+.filters-blok__section-2__part-1 {
     display: flex;
-    justify-content: space-between;
+    justify-content: start;
     align-items: center;
+    border: 2px solid #000;
 }
 
-.filters-blok__content__header h3 {
-    color: #000;
-}
-
-.filters-modal__close {
-    background: none;
-    width: 35px;
-    height: 35px;
-    cursor: pointer;
-    color: #000;
-    transition: .5s;
-}
-
-.filters-modal__close:hover {
-    opacity: .6;
-}
-
-.filters-modal__content .filters-blok {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
-
-.filters-modal__section {
-    margin-bottom: 15px;
-    width: 48%;
-}
-
-.filters-modal__section select,
-.filters-modal__section input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-top: 5px;
-    outline-color: var(--blue-light-color);
+.filters-blok__section-2__part-1 input {
+    font-size: 105%;
+    padding: 5px 10px;
+    outline: none;
+    font-weight: 600;
+    border: none;
+    width: 150px;
     font-family: "Inter", sans-serif;
 }
 
-.filters-modal__section label {
-    font-weight: bold;
+.filters-blok__section-2__part-2 {
+    display: flex;
+    justify-content: start;
+    gap: 10px;
+    align-items: center;
+    position: relative;
+}
+
+.filters-blok__section-2__part-2__button {
+    font-size: 105%;
+    padding: 5px 10px;
+    width: 150px;
+    cursor: pointer;
+    transition: .5s;
+}
+
+.filters-blok__section-2__part-2__button:hover {
+    opacity: .5;
+}
+
+.filters-blok__section-2__part-2__button.active {
+    background-color: var(--blue-light-color);
+    color: #fff;
+}
+
+.filters-blok__section-2__part-2 div {
+    border: 2px solid #000;
+}
+
+.filters-blok__section-2__part-2 input {
+    font-size: 105%;
+    padding: 5px 10px;
+    outline: none;
+    font-weight: 600;
+    border: none;
+    width: 150px;
+    font-family: "Inter", sans-serif;
+}
+
+.filters-blok__section-2__part-2 input::placeholder {
+    font-weight: 600;
+}
+
+.filters-blok__section-2__icon {
+    width: 15px;
+    height: 15px;
     color: #000;
 }
 
-.filters-modal__footer {
-    margin-top: 20px;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+.city-dropdown {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    width: 100%;
+    max-height: 300px;
+    overflow-y: auto;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    z-index: 10;
+    top: 100%;
+    margin-top: 10px;
+    border: 1px solid var(--blue-light-color);
+    box-shadow: 0px 0px 10px 1px rgba(181, 181, 181, 1);
 }
 
-.filters-modal__footer button {
-    padding: 10px 15px;
-    transition: .5s;
+.city-dropdown li {
+    padding: 10px;
+    margin: 0 0 0 10px;
     cursor: pointer;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
+    color: #000;
+    font-weight: 600;
+    border-bottom: 1px solid var(--blue-light-color);
 }
 
-.filters-modal__footer button:hover {
-    opacity: .6;
-}
-
-.filter-modal__footer__button1 {
-    background-color: var(--blue-light-color);
-}
-
-.filter-modal__footer__button2 {
-    background-color: rgb(255, 96, 96);
-}
-
-.filters-modal__apply-btn {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.filters-modal__apply-btn:hover {
-    background-color: #0056b3;
+.city-dropdown li:hover {
+    background-color: #f0f0f0;
 }
 
 @media (max-width: 768px) {
@@ -188,6 +143,10 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        gap: 10px;
+    }
+    .filters-blok__section-1 {
+        width: 100%;
     }
     .filters-blok__section-1 input {
         font-size: 100%;
@@ -196,26 +155,21 @@
         width: 100%;
         border: none;
     }
-    .filters-blok__section-2 {
-        padding: 3px 7px;
-    }
     .filters-blok__section-1__icon {
         width: 20px;
         height: 20px;
     }
-    .filters-blok__section-3 select {
+    .filters-blok__section-2 select {
         padding: 10px 20px;
     }
-}
-
-@media (max-width: 620px) {
-    .filters-modal__content {
-        margin: 0;
-        border-radius: 0;
+    .filters-blok__section-2__part-1 input {
+        width: 100%;
     }
-    .filters-blok__section-1 input {
-        width: 100px;
-
+    .filters-blok__section-2__part-2__button {
+        width: 90%;
+    }
+    .filters-blok__section-2__part-2 input {
+        width: 90%;
     }
 }
 

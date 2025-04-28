@@ -105,13 +105,21 @@ export default function VacancyDetail() {
                 </p>
               </div>
               <div className="vacancy-detail-blok__section-1__card__section-2">
-                <p>Требуемый опыт работы: <span>{vacancy.experience_required || 'Не требуется'}</span></p>
+                <p>Требуемый опыт работы: <span>{vacancy.experience?.name || 'Не требуется'}</span></p>
                 <p>Формат работы: <span>{vacancy.schedule?.name || 'Не указано'}</span></p>
-                <p>Рабочие часы: <span>{vacancy.working_hours?.name || 'Не указано'}</span></p>
+                <p>Рабочее время:{" "}
+                  <span>
+                    {[...(vacancy.working_hours || []).map(item => item.name),
+                    ...(vacancy.work_schedule_by_days || []).map(item => item.name)
+                    ].filter(Boolean).join(', ') || 'Не указано'}
+                  </span>
+                </p>
                 <p>Выплата: <span>{vacancy.salary_range?.frequency?.name || 'Не указано'}</span></p>
               </div>
               <div className="vacancy-detail-blok__section-1__card__footer">
-                <a href={`https://hh.ru/vacancy/${vacancy.employer.id}`}><button className='vacancy__button'>Отклик в hh</button></a>
+                <a href={`https://hh.ru/vacancy/${vacancy.employer.id}`} target='_blank'>
+                  <button className='vacancy__button'>Отклик в hh</button>
+                </a>
               </div>
             </div>
             <div className="vacancy-detail-blok__section-1__description">

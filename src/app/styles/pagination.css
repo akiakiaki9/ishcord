@@ -2,16 +2,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
     margin-top: 30px;
     gap: 10px;
 }
 
 .pagination button {
     padding: 10px 20px;
-    background-color: var(--blue-light-color);
     border: none;
     border-radius: 2px;
-    color: #fff;
+    color: #000;
     transition: .5s;
     cursor: pointer;
     font-style: 110%;
@@ -26,6 +26,11 @@
     transition: .5s;
     cursor: pointer;
     font-style: 110%;
+}
+
+.pagination button.active {
+    background-color: var(--blue-light-color);
+    color: #fff;
 }
 
 

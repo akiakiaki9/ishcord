@@ -14,14 +14,16 @@ import './styles/company.css'
 import './styles/required.css'
 
 export const metadata = {
-  title: "IshCord",
-  description: "Найди подходящую работу в Узбекистане!",
+  title: "IshCord - Вакансии в Узбекистане",
+  description: "Более 10 0000 вакансий в Узбекистане!",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <head />
+      <head>
+        <link rel="icon" href="/images/ishcord.PNG" />
+      </head>
       <body>
         {children}
       </body>

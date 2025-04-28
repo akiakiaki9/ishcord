@@ -98,6 +98,7 @@
     text-decoration: none;
     color: var(--card-color);
     font-weight: bold;
+    max-width: 400px;
 }
 
 .vacancy__card__section-2__part a:hover {
@@ -217,7 +218,7 @@
     }
 
     .vacancy__card__footer-2 p {
-        font-size: 50%; 
+        font-size: 50%;
     }
 
     .vacancy__card__header__icon {
@@ -230,10 +231,12 @@
     .vacancy__cards {
         justify-content: center;
     }
+
     .vacancy__card {
         width: 100%;
         min-width: 200px;
     }
+
     .vacancy__card__footer__icon {
         width: 20px;
         height: 20px;
