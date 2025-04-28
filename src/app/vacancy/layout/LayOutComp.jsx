@@ -120,7 +120,7 @@ export default function LayOutComp() {
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
-    localStorage.setItem('currentPage', newPage); // Сохраняем текущую страницу в localStorage
+    localStorage.setItem('currentPage', newPage);
   };
 
   const handleResetFilters = () => {
@@ -134,7 +134,7 @@ export default function LayOutComp() {
     setFormat('');
     setSchedule('');
     setSortNewFirst(false);
-    setPage(1); // Сбрасываем страницу на 1
+    setPage(1);
   };
 
   const handleSortNewFirst = () => {
