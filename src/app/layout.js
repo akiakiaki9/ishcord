@@ -12,6 +12,7 @@ import './styles/about.css'
 import './styles/pagination.css'
 import './styles/company.css'
 import './styles/required.css'
+import './styles/vacancies.css'
 
 export const metadata = {
   title: "IshCord - Вакансии в Узбекистане",

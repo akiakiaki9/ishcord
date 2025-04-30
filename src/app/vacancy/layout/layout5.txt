@@ -8,9 +8,14 @@ import { IoIosArrowDown } from "react-icons/io";
 
 export default function LayOutComp() {
   const [vacancies, setVacancies] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [cities, setCities] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
+  const [salary_from, setSalaryFrom] = useState('');
+  const [salary_to, setSalaryTo] = useState('');
+  const [format, setFormat] = useState('');
+  const [schedule, setSchedule] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,47 +23,29 @@ export default function LayOutComp() {
   const [searchCityTerm, setSearchCityTerm] = useState('');
   const [showCityList, setShowCityList] = useState(false);
   const [sortNewFirst, setSortNewFirst] = useState(false);
-  const [noExperience, setNoExperience] = useState(false);
-  const [schedules, setSchedules] = useState([]);
-  const [selectedSchedule, setSelectedSchedule] = useState('');
-  const [showScheduleList, setShowScheduleList] = useState(false);
+
   const dropdownRef = useRef(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setSelectedCategory(localStorage.getItem('selectedCategory') || '');
       setSelectedCity(localStorage.getItem('selectedCity') || '');
+      setSalaryFrom(localStorage.getItem('salary_from') || '');
+      setSalaryTo(localStorage.getItem('salary_to') || '');
+      setFormat(localStorage.getItem('format') || '');
+      setSchedule(localStorage.getItem('schedule') || '');
       setSortNewFirst(localStorage.getItem('sortNewFirst') === 'true');
-      setSelectedSchedule(localStorage.getItem('selectedSchedule') || '');
-      setNoExperience(localStorage.getItem('noExperience') === 'true');
       setPage(parseInt(localStorage.getItem('currentPage')) || 1);
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('noExperience', noExperience);
-  }, [noExperience]);
-
-  useEffect(() => {
-    localStorage.setItem('selectedSchedule', selectedSchedule);
-  }, [selectedSchedule]);
-
-  useEffect(() => {
-    const fetchSchedules = async () => {
-      try {
-        const res = await axios.get('https://api.hh.ru/dictionaries');
-        setSchedules(res.data.schedule || []);
-      } catch (err) {
-        console.error('Ошибка при загрузке форматов работы:', err);
-      }
-    };
-
-    fetchSchedules();
-  }, []);
-
-  useEffect(() => {
     const fetchCategoriesAndCities = async () => {
       try {
+        const categoriesRes = await axios.get('https://api.hh.ru/professional_roles');
+        const categoriesData = categoriesRes.data?.categories || [];
+        setCategories(Array.isArray(categoriesData) ? categoriesData : []);
+
         const citiesRes = await axios.get('https://api.hh.ru/areas');
         const allAreas = citiesRes.data;
 
@@ -79,6 +66,7 @@ export default function LayOutComp() {
           }
         }
       } catch (error) {
+        setCategories([]);
         setCities([]);
       }
     };
@@ -99,9 +87,11 @@ export default function LayOutComp() {
         };
 
         if (selectedCategory) params.professional_role = selectedCategory;
-        if (selectedSchedule) params.schedule = selectedSchedule;
+        if (salary_from) params.salary_from = salary_from;
+        if (salary_to) params.salary_to = salary_to;
+        if (format) params.employment = format;
+        if (schedule) params.schedule = schedule;
         if (searchTerm) params.text = searchTerm;
-        if (noExperience) params.experience = 'noExperience';
 
         const { data } = await axios.get('https://api.hh.ru/vacancies', { params });
 
@@ -118,12 +108,14 @@ export default function LayOutComp() {
   }, [
     page,
     selectedCategory,
+    salary_from,
+    salary_to,
+    format,
+    schedule,
     searchTerm,
     selectedCity,
     uzbekistanAreaId,
     sortNewFirst,
-    noExperience,
-    selectedSchedule,
   ]);
 
   const handlePageChange = (newPage) => {
@@ -135,6 +127,22 @@ export default function LayOutComp() {
     const newState = !sortNewFirst;
     setSortNewFirst(newState);
     localStorage.setItem('sortNewFirst', newState);
+  };
+
+  const handleSalaryFromChange = (e) => {
+    let value = e.target.value.replace(/\D/g, '');
+    setSalaryFrom(formatNumber(value));
+    localStorage.setItem('salary_from', value);
+  };
+
+  const handleSalaryToChange = (e) => {
+    let value = e.target.value.replace(/\D/g, '');
+    setSalaryTo(formatNumber(value));
+    localStorage.setItem('salary_to', value);
+  };
+
+  const formatNumber = (value) => {
+    return value.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   };
 
   const currencySymbols = { RUR: '₽', RUB: '₽', USD: '$', EUR: '€', UZS: 'сум', };
@@ -153,57 +161,33 @@ export default function LayOutComp() {
               <FaSearch className="filters-blok__section-1__icon" />
             </div>
             <div className="filters-blok__section-2">
-              <div className='filters-blok__section-2__part-2'>
-                <div>
-                  <input
-                    type="text"
-                    placeholder="Формат работы"
-                    value={
-                      selectedSchedule
-                        ? schedules.find(s => s.id === selectedSchedule)?.name || ''
-                        : ''
-                    }
-                    readOnly
-                    onClick={() => setShowScheduleList(!showScheduleList)}
-                  />
-                  <IoIosArrowDown className='filters-blok__section-2__icon' />
-                  {showScheduleList && (
-                    <ul className="city-dropdown">
-                      <li onClick={() => {
-                        setSelectedSchedule('');
-                        setShowScheduleList(false);
-                      }}>
-                        Все форматы
-                      </li>
-                      {schedules.map(schedule => (
-                        <li
-                          key={schedule.id}
-                          onClick={() => {
-                            setSelectedSchedule(schedule.id);
-                            setShowScheduleList(false);
-                          }}
-                        >
-                          {schedule.name}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-                <button onClick={() => setNoExperience(prev => !prev)}
-                  className={`filters-blok__section-2__part-2__button ${noExperience ? 'active' : ''}`}
-                >
-                  Без опыта
-                </button>
+              <div className='filters-blok__section-2__part-1'>
+                <input
+                  type="text"
+                  placeholder="Зарплата от"
+                  value={formatNumber(salary_from)}
+                  onChange={handleSalaryFromChange}
+                />
+                <input
+                  type="text"
+                  placeholder="Зарплата до"
+                  value={formatNumber(salary_to)}
+                  onChange={handleSalaryToChange}
+                />
               </div>
               <div className='filters-blok__section-2__part-2'>
                 <button onClick={handleSortNewFirst} className={`filters-blok__section-2__part-2__button ${sortNewFirst ? 'active' : ''}`}>
                   Сначала новые
                 </button>
                 <div>
-                  <input type="text" placeholder="Поиск города" value={searchCityTerm} onChange={(e) => {
-                    setSearchCityTerm(e.target.value);
-                    setShowCityList(true);
-                  }}
+                  <input
+                    type="text"
+                    placeholder="Поиск города"
+                    value={searchCityTerm}
+                    onChange={(e) => {
+                      setSearchCityTerm(e.target.value);
+                      setShowCityList(true);
+                    }}
                     onFocus={() => setShowCityList(true)}
                     onBlur={() => setTimeout(() => setShowCityList(false), 200)}
                   />
@@ -222,23 +206,29 @@ export default function LayOutComp() {
                     </li>
                     {cities.filter(city => city.name.toLowerCase().includes(searchCityTerm.toLowerCase()))
                       .map(city => (
-                        <li key={city.id} onClick={() => {
-                          setSelectedCity(city.id);
-                          setSearchCityTerm(city.name);
-                          localStorage.setItem('selectedCity', city.id);
-                          setShowCityList(false);
-                        }}>
+                        <li
+                          key={city.id}
+                          onClick={() => {
+                            setSelectedCity(city.id);
+                            setSearchCityTerm(city.name);
+                            localStorage.setItem('selectedCity', city.id);
+                            setShowCityList(false);
+                          }}
+                        >
                           {city.name}
                         </li>
-                      ))}
-                  </ul>)}
+                      ))
+                    }
+                  </ul>
+                )}
               </div>
             </div>
+
           </div>
         </div>
       </div>
       {vacancies.length === 0 ? (
-        <p className='no-info'>Нет вакансий</p>
+        <p className='no-info'>Нет вакансий по этому городу</p>
       ) : (
         <div className="vacancy__cards">
           {vacancies.map((vacancy) => (

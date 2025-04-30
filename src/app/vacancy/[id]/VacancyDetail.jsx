@@ -4,6 +4,7 @@ import { IoShieldCheckmarkOutline } from "react-icons/io5";
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import axios from 'axios';
+import ScrollTop from '@/app/components/ScrollToTop';
 
 export default function VacancyDetail() {
   const params = useParams();
@@ -77,6 +78,7 @@ export default function VacancyDetail() {
 
   return (
     <div>
+      <ScrollTop />
       <div className='vacancy-detail'>
         <div className="vacancy-detail-blok">
           <div className="vacancy-detail-blok__section-1">

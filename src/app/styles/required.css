@@ -10,10 +10,12 @@
 
 .required-blok h1 {
     margin-bottom: 10px;
+    font-family: "Inter", sans-serif;
 }
 
 .required-blok__section h2 {
     margin-bottom: 5px;
+    font-family: "Inter", sans-serif;
 }
 
 .required-blok__section ul li {

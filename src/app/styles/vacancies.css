@@ -1,0 +1,42 @@
+.vacancies {
+    padding: 30px 0;
+}
+
+.vacancies-blok {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.vacancies-blok a {
+    text-decoration: none;
+    color: var(--blue-light-color);
+    font-weight: 600;
+    transition: .5s;
+    cursor: pointer;
+}
+
+.vacancies-blok a:hover {
+    opacity: .5;
+}
+
+.vacancies-blok p {
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .vacancies-blok {
+        gap: 5px;
+    }
+    .vacancies-blok a {
+        font-size: 80%;
+        min-width: 90px;
+    }
+    .vacancies-blok p {
+        font-size: 80%;
+    }
+    .vacancies-blok h3 {
+        font-size: 90%;
+    }
+}

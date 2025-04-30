@@ -16,7 +16,7 @@
     align-items: center;
     padding: 10px;
     border-radius: 2px;
-    border: 2px solid var(--bg-light-color);
+    border: 1px solid #ddd;
 }
 
 .filters-blok__section-1 input {
@@ -47,17 +47,7 @@
     display: flex;
     justify-content: start;
     align-items: center;
-    border: 2px solid #000;
-}
-
-.filters-blok__section-2__part-1 input {
-    font-size: 105%;
-    padding: 5px 10px;
-    outline: none;
-    font-weight: 600;
-    border: none;
-    width: 150px;
-    font-family: "Inter", sans-serif;
+    border: 1px solid #ddd;
 }
 
 .filters-blok__section-2__part-2 {
@@ -75,7 +65,7 @@
     cursor: pointer;
     transition: .5s;
     color: #000;
-    border: 1px solid #000;
+    border: 1px solid #ddd;
 }
 
 .filters-blok__section-2__part-2__button:hover {
@@ -88,7 +78,7 @@
 }
 
 .filters-blok__section-2__part-2 div {
-    border: 2px solid #000;
+    border: 1px solid #ddd;
     display: flex;
     justify-content: start;
     align-items: center;
@@ -98,14 +88,9 @@
     font-size: 105%;
     padding: 5px 10px;
     outline: none;
-    font-weight: 600;
     border: none;
     width: 150px;
     font-family: "Inter", sans-serif;
-}
-
-.filters-blok__section-2__part-2 input::placeholder {
-    font-weight: 600;
 }
 
 .filters-blok__section-2__icon {
@@ -173,9 +158,11 @@
     }
     .filters-blok__section-2__part-2__button {
         width: 90%;
+        font-size: 90%;
     }
     .filters-blok__section-2__part-2 input {
         width: 90%;
+        font-size: 95%;
     }
 }
 

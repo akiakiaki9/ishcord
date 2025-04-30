@@ -99,3 +99,28 @@
 .layout {
     padding: 10px;
 }
+
+.scrolltop__button {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background-color: #e7e7e7;
+    cursor: pointer;
+    transition: .5s;
+}
+
+.scrolltop__icon {
+    width: 15px;
+    height: 15px;
+    color: var(--blue-light-color);
+}
+
+.scrolltop__button:hover {
+    opacity: .5;
+}
