@@ -23,7 +23,7 @@ export default function Footer() {
           <Link href="/"><p className='footer-blok__section__p2'>Главное</p></Link>
           <Link href="/vacancy"><p className='footer-blok__section__p2'>Вакансии</p></Link>
           <Link href="/requirements"><p className='footer-blok__section__p2'>Требования к ПО</p></Link>
-          <Link href="/"><p className='footer-blok__section__p2'>Помощь</p></Link>
+          <Link href="/version"><p className='footer-blok__section__p2'>Версии</p></Link>
         </div>
         <div className="footer-blok__section">
           <p className='footer-blok__section__p1'>Полезное</p>

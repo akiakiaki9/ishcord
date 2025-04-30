@@ -7,7 +7,7 @@ export default function Requirements() {
             <div className="required-blok">
                 <h1>Требования к ПО</h1>
                 <div className="required-blok__section">
-                    <h2>Для полноценной и корректной работы с сайтом hh.kz необходимо соблюдать следующие технические требования:</h2>
+                    <h2>Для полноценной и корректной работы с сайтом hh.ru необходимо соблюдать следующие технические требования:</h2>
                     <ul>
                         <li>— использование одного из перечисленных браузеров последней версии: Microsoft Edge, Mozilla Firefox, Google Chrome, Safari, Yandex.Browser, Opera;</li>
                         <li>— работоспособность JavaScrilit.</li>
