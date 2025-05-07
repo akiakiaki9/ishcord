@@ -11,7 +11,7 @@ export default function About() {
                     <p>
                         Мы помогаем компаниям найти талантливых сотрудников, а кандидатам – интересную работу.
                     </p>
-                    <Link href="/vacancy"><button>К Вакансиям</button></Link>
+                    <Link href="/categories"><button>К Категориям</button></Link>
                 </div>
                 <div className="about-blok__section-2">
                     <img src="/images/header-1.png" alt="About IshCord" />

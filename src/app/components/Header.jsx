@@ -55,7 +55,7 @@ export default function Header() {
       <div className="header-blok">
         <div className="header-blok__section-1">
           <div className="header-blok__section-1-part">
-            <Link href="/"><img src="/images/ishcord.PNG" alt="IshCord Logo" /></Link>
+            <Link href="/"><img src="/images/header.PNG" alt="IshCord Logo" /></Link>
           </div>
         </div>
         <div className="header-blok__section-2">

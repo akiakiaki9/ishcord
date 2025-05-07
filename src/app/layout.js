@@ -17,13 +17,16 @@ import './styles/vacancies.css'
 export const metadata = {
   title: "IshCord - Вакансии в Узбекистане",
   description: "Более 10 0000 вакансий в Узбекистане!",
+  other: {
+    'google-site-verification': 'd3pJ15Hi_CUbvfyoyE4PA96w36m-wK0QPBCRtKWMOjw',
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/images/ishcord.PNG" />
+        <link rel="icon" href="/images/ishcord1.PNG" />
       </head>
       <body>
         {children}

@@ -1,15 +1,13 @@
-"use client"
-import React from 'react'
 import Navbar from '@/app/components/Navbar'
+import React from 'react'
+import Andijan from './Andijan'
 import Footer from '@/app/components/Footer'
-import VacancyDetail from './VacancyDetail'
 
 export default function page() {
-
     return (
         <div>
             <Navbar />
-            <VacancyDetail />
+            <Andijan />
             <Footer />
         </div>
     )

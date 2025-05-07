@@ -52,8 +52,9 @@
 }
 
 .navbar-blok__section-1 img {
-    width: 60px;
-    height: 60px;
+    width: 120px;
+    height: 70px;
+    object-fit: cover;
 }
 
 .navbar-blok__section__icon {

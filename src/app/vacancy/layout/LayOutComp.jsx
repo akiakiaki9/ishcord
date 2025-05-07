@@ -67,6 +67,7 @@ export default function LayOutComp() {
         );
 
         if (uzbekistan) {
+          console.log('Uzbekistan ID:', uzbekistan.id);
           setUzbekistanAreaId(uzbekistan.id);
           setCities(uzbekistan.areas || []);
 
@@ -129,6 +130,7 @@ export default function LayOutComp() {
   const handlePageChange = (newPage) => {
     setPage(newPage);
     localStorage.setItem('currentPage', newPage);
+    window.scrollTo(0, 0);
   };
 
   const handleSortNewFirst = () => {

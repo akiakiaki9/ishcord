@@ -15,7 +15,7 @@ export default function Navbar() {
     <div className="navbar">
       <div className="navbar-blok">
         <div className="navbar-blok__section-1">
-          <Link href="/"><img src="/images/ishcord.PNG" alt="IshCord Logo" /></Link>
+          <Link href="/"><img src="/images/ishcord1.PNG" alt="IshCord Logo" /></Link>
           <Link href="/vacancy">
             <p className='navbar-blok__section__p' style={{ color: activePage === '/vacancy' ? 'var(--blue-light-color)' : '#fff' }}>Вакансии</p>
           </Link>

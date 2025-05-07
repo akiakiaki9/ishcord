@@ -80,6 +80,23 @@ export default function Shapka() {
                     ))}
                 </div>
             </div>
+            <br />
+            <br />
+            <div className="shapka-blok">
+                <Link href='/vacancy/tashkent' className='shapka-blok__a'>Ташкент</Link>
+                <Link href='/vacancy/andijan' className='shapka-blok__a'>Андижан</Link>
+                <Link href='/vacancy/bukhara' className='shapka-blok__a'>Бухара</Link>
+                <Link href='/vacancy/samarkand' className='shapka-blok__a'>Самарканд</Link>
+                <Link href='/vacancy/fergana' className='shapka-blok__a'>Фергана</Link>
+                <Link href='/vacancy/namangan' className='shapka-blok__a'>Наманган</Link>
+                <Link href='/vacancy/gulistan' className='shapka-blok__a'>Гулистан</Link>
+                <Link href='/vacancy/jizakh' className='shapka-blok__a'>Джизак</Link>
+                <Link href='/vacancy/navoi' className='shapka-blok__a'>Навои</Link>
+                <Link href='/vacancy/karshi' className='shapka-blok__a'>Карши</Link>
+                <Link href='/vacancy/termez' className='shapka-blok__a'>Термез</Link>
+                <Link href='/vacancy/urgench' className='shapka-blok__a'>Ургенч</Link>
+                <Link href='/vacancy/nukus' className='shapka-blok__a'>Нукус</Link>
+            </div>
             <style jsx>{`
                 .shapka {
                     padding: 20px;

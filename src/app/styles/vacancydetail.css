@@ -239,4 +239,7 @@
     .vacancy-detail-blok__section-2__card__container h3 {
         font-size: 90%;
     }
+    .vacancy-detail-blok__section-2__card img {
+        width: 100%;
+    }
 }

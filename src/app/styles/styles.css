@@ -124,3 +124,17 @@
 .scrolltop__button:hover {
     opacity: .5;
 }
+
+.shapka-blok__a {
+    text-decoration: none;
+    color: #fff;
+    transition: 0.5s;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: var(--blue-light-color)
+}
+
+.shapka-blok__a:hover {
+    opacity: 0.5;
+}
