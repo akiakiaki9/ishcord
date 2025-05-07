@@ -19,6 +19,7 @@ export const metadata = {
   description: "Более 10 0000 вакансий в Узбекистане!",
   other: {
     'google-site-verification': 'd3pJ15Hi_CUbvfyoyE4PA96w36m-wK0QPBCRtKWMOjw',
+    'yandex-verification': '32d166ca44a8a7cf',
   },
 };
 
