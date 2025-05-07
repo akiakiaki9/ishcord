@@ -39,7 +39,6 @@ export default function Employer() {
         setActiveTab(tab);
     };
 
-    // Добавляем проверку на наличие данных employer перед рендером
     if (!employer) {
         return <div className='loading'><div className='loading-spinner'></div></div>;
     }

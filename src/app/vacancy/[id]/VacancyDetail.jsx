@@ -61,13 +61,7 @@ export default function VacancyDetail() {
     return '';
   };
 
-  const currencySymbols = {
-    RUR: '₽',
-    RUB: '₽', // иногда может быть RUB
-    USD: '$',
-    EUR: '€',
-    UZS: 'сум',
-  };
+  const currencySymbols = { RUR: '₽', RUB: '₽', USD: '$', EUR: '€', UZS: 'сум', };
 
   if (loading) {
     return <div className='loading'><div className='loading-spinner'></div></div>;
