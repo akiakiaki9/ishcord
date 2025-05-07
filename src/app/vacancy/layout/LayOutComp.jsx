@@ -67,7 +67,6 @@ export default function LayOutComp() {
         );
 
         if (uzbekistan) {
-          console.log('Uzbekistan ID:', uzbekistan.id);
           setUzbekistanAreaId(uzbekistan.id);
           setCities(uzbekistan.areas || []);
 

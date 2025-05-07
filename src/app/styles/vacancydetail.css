@@ -232,6 +232,7 @@
     }
     .vacancy-detail-blok__section-1__description-p1 {
         font-size: 70%;
+        padding: 0 0 0 10px;
     }
     .vacancy-detail-blok__section-1__description-p2 {
         font-size: 80%;
