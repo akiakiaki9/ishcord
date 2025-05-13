@@ -13,6 +13,7 @@ import './styles/pagination.css'
 import './styles/company.css'
 import './styles/required.css'
 import './styles/vacancies.css'
+import Script from 'next/script'
 
 export const metadata = {
   title: "IshCord - Работа в Узбекистане",
