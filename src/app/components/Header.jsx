@@ -1,63 +1,30 @@
 'use client'
 import Link from 'next/link'
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 
 export default function Header() {
-  const headerRef = useRef(null);
-  const [inView, setInView] = useState(false);
-  const [counts, setCountes] = useState({ vacancies: 0, users: 0, compaines: 0 });
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        setInView(entry.isIntersecting);
-      },
-      { threshold: 0.1 }
-    );
-
-    if (headerRef.current) {
-      observer.observe(headerRef.current);
-    }
-
-    return () => {
-      if (headerRef.current) {
-        observer.unobserve(headerRef.current);
-      }
-    };
-  }, []);
+  const [counts, setCounts] = useState({ vacancies: 0 });
 
   useEffect(() => {
     const fetchCounts = async () => {
       try {
-        const [vacRes] = await Promise.all([fetch('https://api.hh.ru/vacancies?area=97')]);
-        const vacData = await vacRes.json();
+        const response = await fetch('https://api.hh.ru/vacancies?area=97');
+        const data = await response.json();
 
-        const targetCounts = {
-          vacancies: vacData.found || 0,
-          users: 100000,
-          compaines: 300
-        };
-
-        setCountes(targetCounts);
+        setCounts({
+          vacancies: data.found || 0,
+        });
       } catch (error) {
         console.error('Ошибка при получении данных с hh.ru:', error);
       }
     };
 
-    if (inView) {
-      fetchCounts();
-    }
-  }, [inView]);
+    fetchCounts();
+  }, []);
 
   return (
-    <div className='header' ref={headerRef}>
+    <div className='header'>
       <div className="header-blok">
-        <div className="header-blok__section-1">
-          <div className="header-blok__section-1-part">
-            <Link href="/"><img src="/images/header.PNG" alt="IshCord Logo" /></Link>
-          </div>
-        </div>
         <div className="header-blok__section-2">
           <div className="header-blok__section-2-part">
             <h1>Найди работу мечты</h1>
@@ -68,11 +35,11 @@ export default function Header() {
               <p>вакансий</p>
             </div>
             <div className="header-blok__section-2-part__container">
-              <p className='header-blok__section-2-part__container-p1'>{counts.users}+</p>
+              <p className='header-blok__section-2-part__container-p1'>100 000+</p>
               <p>пользователей</p>
             </div>
             <div className="header-blok__section-2-part__container">
-              <p className='header-blok__section-2-part__container-p1'>{counts.compaines}+</p>
+              <p className='header-blok__section-2-part__container-p1'>300+</p>
               <p>компаниий</p>
             </div>
           </div>

@@ -22,7 +22,7 @@ export const metadata = {
     "вакансии", "работа в Узбекистане", "вакансии Узбекистан",
     "поиск работы", "новые вакансии", "работа без опыта", "удалённая работа", "ish", "vakansiya", "работа в Узбекистане", "работа",
     "поиск вакансий", "ish kop", "ishcord", "ish top", "ish qidiruv", "uz ish", "ozbekiston ish", "трудоустройства", "трудовой центр",
-    "заработок", "заработать в интернете", "онлайн работа", "заработать онлайн", "online ish", "pul", "pul topish"
+    "заработок", "заработать в интернете", "онлайн работа", "заработать онлайн", "online ish", "pul", "pul topish", "ишкорд", "иш"
   ],
   robots: "index, follow",
   authors: [{ name: "IshCord" }],
@@ -45,7 +45,7 @@ export const metadata = {
     'yandex-verification': '32d166ca44a8a7cf',
   },
   icons: {
-    icon: "/images/ishcord1.PNG",
+    icon: "/images/icon.jpg",
   }
 };
 
