@@ -54,6 +54,22 @@ export default function RootLayout({ children }) {
     <html lang="ru">
       <head>
         <link rel="icon" href="/images/ishcord1.PNG" />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-C5H4MLMDYL"
+          strategy="afterInteractive"
+        />
+        <Script
+          id="gtag-init"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-C5H4MLMDYL');
+          `,
+          }}
+        />
       </head>
       <body>
         <Script
