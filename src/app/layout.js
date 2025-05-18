@@ -53,6 +53,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ru">
       <head>
+        <meta name="google-adsense-account" content="ca-pub-8855410666957906"></meta>
         <link rel="icon" href="/images/ishcord1.PNG" />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-C5H4MLMDYL"
